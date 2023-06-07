@@ -17,6 +17,9 @@ STATE_CHOICES = (
 )
 
 
+
+
+
 class Shop(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
     url = models.URLField(verbose_name='Ссылка', null=True, blank=True)
