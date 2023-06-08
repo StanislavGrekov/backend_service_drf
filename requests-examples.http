@@ -1,0 +1,123 @@
+# примеры API-запросов
+
+@baseUrl = http://localhost:8000/api/
+
+# Запрос№1. получение объявлений
+GET {{baseUrl}}index/
+Content-Type: application/json
+
+###
+
+# Запрос#2. получение объявлений
+GET {{baseUrl}}index/
+Content-Type: application/json
+Authorization: Token c5bb83ffc26b3656a5398d34e61cf66dbac7fc5e
+
+###
+# Запрос№3. на получение токена
+POST {{baseUrl}}user/registration/
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "123"
+}
+
+###
+
+# Запрос№4. на получение списка пользователей
+GET {{baseUrl}}user/list/
+Content-Type: application/json
+
+###
+
+# Запрос№5. на получение информации о пользователе
+GET {{baseUrl}}user/detail/9/
+Content-Type: application/json
+
+###
+
+# Запрос№6. на создание пользователя
+POST {{baseUrl}}user/create/
+Content-Type: application/json
+
+{
+  "username": "Semenov",
+  "first_name": "Семен",
+  "last_name": "Семенов",
+  "email": "stas@yandex.ru",
+  "password": "123"
+}
+
+###
+
+# Запрос№7. на изменение пользователя
+PATCH {{baseUrl}}user/update/9/
+Content-Type: application/json
+
+{
+  "email": "stas@yandex.ru",
+  "password": "12456"
+}
+
+###
+
+
+
+
+
+
+###
+# Запрос№3. создание объявления пользователем №2
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token dc1e881246753e6d27ef954e807c6f4fb1ac3f97
+
+{
+  "title": "продам Телевизор",
+  "description": "Продама новый телевизор"
+}
+
+###
+# Запрос№4. Пользователь закрывает объявление.
+PATCH {{baseUrl}}/advertisements/23/
+Content-Type: application/json
+Authorization: Token dc1e881246753e6d27ef954e807c6f4fb1ac3f97
+
+{
+  "status": "CLOSED"
+}
+
+###
+# Запрос№5. Меняем объявление администратором
+PUT {{baseUrl}}/advertisements/23/
+Content-Type: application/json
+Authorization: Token bd56aa950eda45bf91890682866fa47e9802aaaf
+
+{
+  "title": "Продома Телевизор",
+  "description": "Продам новый телевизор (проверено)",
+  "open": true,
+  "status": "OPEN"
+}
+
+###
+# Запрос№6. Фильтрация по создателю
+GET {{baseUrl}}/advertisements/?creator=3
+Content-Type: application/json
+
+###
+# Запрос№7.Фильтрация по статусу
+GET {{baseUrl}}/advertisements/?status=OPEN
+Content-Type: application/json
+
+###
+# Запрос№8. Фильтрация по дате
+GET {{baseUrl}}/advertisements/?created_at_after=2023-02-21&&created_at_before=2023-02-26
+Content-Type: application/json
+
+###
+# Запрос№9. Удаление
+DELETE {{baseUrl}}/advertisements/26/
+Content-Type: application/json
+Authorization: Token bd56aa950eda45bf91890682866fa47e9802aaaf
