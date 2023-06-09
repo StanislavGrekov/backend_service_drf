@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
-from orders.views import Index, UserList, UserCreate, UserDetail, UserUpdate
+from orders.views import Index, UserList, UserCreate, UserDetail, UserUpdate, UserDestroy
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +28,6 @@ urlpatterns = [
     path('api/user/create/', UserCreate.as_view()),
     path('api/user/update/<int:pk>/', UserUpdate.as_view()),
     path('api/user/detail/<int:pk>/', UserDetail.as_view()),
+    path('api/user/delete/<int:pk>/', UserDestroy.as_view()),
 
 ]

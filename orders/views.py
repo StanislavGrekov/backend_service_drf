@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
 from django.contrib.auth import authenticate
@@ -11,7 +11,6 @@ from rest_framework.authtoken.models import Token
 
 class Index(APIView):
     permission_classes = (IsAuthenticated,)
-
     def get(self, request):
         content = {'message': 'Hello, World!'}
         return Response(content)
@@ -33,5 +32,9 @@ class UserUpdate(UpdateAPIView):
 
 
 class UserDetail(RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserDestroy(DestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer

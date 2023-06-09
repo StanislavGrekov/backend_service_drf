@@ -19,7 +19,7 @@ POST {{baseUrl}}user/registration/
 Content-Type: application/json
 
 {
-  "username": "test",
+  "username": "Ivanovich",
   "password": "123"
 }
 
@@ -42,27 +42,31 @@ POST {{baseUrl}}user/create/
 Content-Type: application/json
 
 {
-  "username": "Semenov",
+  "username": "Dimasikm",
   "first_name": "Семен",
   "last_name": "Семенов",
-  "email": "stas@yandex.ru",
+  "email": "stas.ik1987@yandex.ru",
   "password": "123"
 }
 
 ###
 
 # Запрос№7. на изменение пользователя
-PATCH {{baseUrl}}user/update/9/
+PATCH {{baseUrl}}user/update/34/
 Content-Type: application/json
 
 {
-  "email": "stas@yandex.ru",
-  "password": "12456"
+  "email": "stas.ik1987@yandex.ru",
+  "password": "1667992"
 }
 
 ###
 
+# Запрос№8. на удаление пользователя
+DELETE {{baseUrl}}user/delete/34/
+Content-Type: application/json
 
+###
 
 
 
