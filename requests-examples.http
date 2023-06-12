@@ -25,33 +25,33 @@ Content-Type: application/json
 
 ###
 
-# Запрос№4. на получение списка пользователей
+# Запрос№1. на получение списка пользователей
 GET {{baseUrl}}user/list/
 Content-Type: application/json
 
 ###
 
-# Запрос№5. на получение информации о пользователе
+# Запрос№2. на получение информации о пользователе
 GET {{baseUrl}}user/detail/9/
 Content-Type: application/json
 
 ###
 
-# Запрос№6. на создание пользователя
+# Запрос№3. на создание пользователя
 POST {{baseUrl}}user/create/
 Content-Type: application/json
 
 {
-  "username": "Dimasikm",
-  "first_name": "Семен",
-  "last_name": "Семенов",
+  "username": "Stasonchik",
+  "first_name": "Станислав",
+  "last_name": "Греков",
   "email": "stas.ik1987@yandex.ru",
-  "password": "123"
+  "password": "123456"
 }
 
 ###
 
-# Запрос№7. на изменение пользователя
+# Запрос№4. на изменение пользователя
 PATCH {{baseUrl}}user/update/34/
 Content-Type: application/json
 
@@ -62,11 +62,57 @@ Content-Type: application/json
 
 ###
 
-# Запрос№8. на удаление пользователя
+# Запрос№5. на удаление пользователя
 DELETE {{baseUrl}}user/delete/34/
 Content-Type: application/json
 
 ###
+
+# Запрос№6 Создание контакта
+POST {{baseUrl}}contact/create/
+Content-Type: application/json
+Authorization: Token cff1f4da895b99c4315e0842236b87649bc5e0fd
+
+{
+  "city": "Миасс",
+  "street": "Седова",
+  "house": "5",
+  "structure": "а",
+  "building": "1",
+  "apartment": "67",
+  "phone": "123456"
+}
+
+###
+
+# Запрос№6. Создание магазина
+POST {{baseUrl}}shop/create/
+Content-Type: application/json
+Authorization: Token cff1f4da895b99c4315e0842236b87649bc5e0fd
+
+{
+  "name": "РБТ",
+  "url": "http://svaznoy.ru",
+  "categories": [
+    {
+     "id": "224",
+     "name": "Смартфоны"
+    },
+    {
+     "id": "15",
+     "name": "Аксессуары"
+    }
+  ]
+}
+###
+
+
+# Запрос№7. на получение списка магазинов
+GET {{baseUrl}}shop/list/
+Content-Type: application/json
+
+###
+
 
 
 
