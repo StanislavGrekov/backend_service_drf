@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from django.contrib.auth.models import User
-from orders.models import Shop, Category, Contact
+from orders.models import Shop, Category, Contact, Product, ProductInfo, ProductParameter
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from orders.signal import create_send_mail, update_send_mail
 # from yaml import load as load_yaml, Loader
 import yaml
-from yaml.loader import SafeLoader
+from yaml.loader import Loader
 import requests
 import urllib.request
 import os
@@ -96,39 +96,37 @@ class ShopSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         name = validated_data.get('name')
-        url = validated_data.get('url') # Адрес магазина
+        url = validated_data.get('url') # Адрес прайса
         state = True # Указываем, что магазин активен
 
         request = self.context['request']
         user_id = get_username(request)
 
-        print(name, url, state, user_id)
+        stream = requests.get(url).content
+        price_list = yaml.load(stream, Loader=Loader)
 
-        # stream = requests.get(url).content
-        #
-        #
-        # data = yaml.load(stream, Loader=SafeLoader)
-        #
-        # print(data)
+        shop = Shop.objects.create(name=name, url=url, user_id=user_id, state=state)
 
-        response = requests.get(url)
-        with open('file.yml', 'wb') as file:
-            file.write(response.content)
+        for category in price_list['categories']:
+            cat = Category.objects.create(id=category['id'], name=category['name'])
+            shop.categories.add(cat)
 
+        for element in price_list['goods']:
+            product = Product.objects.create(name=element['name'],
+                                             category_id=element['category'])
+            product_info = ProductInfo.objects.create(product_id=product.id,
+                                                      external_id=element['id'],
+                                                      model=element['model'],
+                                                      price=element['price'],
+                                                      price_rrc=element['price_rrc'],
+                                                      quantity=element['quantity'],
+                                                      shop_id=shop.id)
+            for key, value in element['parameters'].items():
+                ProductParameter.objects.create(product_info_id=product_info.id,
+                                                name=key,
+                                                value=value)
 
-
-
-
-        # categories = validated_data.get('categories')
-
-        # shop = Shop.objects.create(name=name, url=url, user_id=user_id, state=state)
-        #
-        # for category in categories:
-        #     cat = Category.objects.create(id=category['id'], name=category['name'])
-        #     shop.categories.add(cat)
-        #
-        # return shop
-
+        return shop
 
 # class CategorySerializer(serializers.Serializer):
 #     """Cериализатор для создания категорий (почему-то не мог записывать id используя ModelSerializer)"""
