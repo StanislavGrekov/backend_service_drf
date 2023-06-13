@@ -5,8 +5,15 @@ from orders.models import Shop, Category, Contact
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-
+from django.http import JsonResponse
 from orders.signal import create_send_mail, update_send_mail
+# from yaml import load as load_yaml, Loader
+import yaml
+from yaml.loader import SafeLoader
+import requests
+import urllib.request
+import os
+
 
 def get_username(request):
     """Получение id пользователя"""
@@ -72,20 +79,20 @@ class ContactSerializer(serializers.ModelSerializer):
 
 
 
-class CategorySerializer(serializers.Serializer):
-    """Cериализатор для создания категорий (почему-то не мог записывать id используя ModelSerializer)"""
-    id = serializers.IntegerField()
-    name = serializers.CharField()
+# class CategorySerializer(serializers.Serializer):
+#     """Cериализатор для создания категорий (почему-то не мог записывать id используя ModelSerializer)"""
+#     id = serializers.IntegerField()
+#     name = serializers.CharField()
 
 
 class ShopSerializer(serializers.ModelSerializer):
     """Класс создает магазин, категории товаров и делает связь между ними"""
 
-    categories = CategorySerializer(many=True)
+    # categories = CategorySerializer(many=True)
 
     class Meta:
         model = Shop
-        fields = ['name', 'url', 'user', 'state', 'categories']
+        fields = ['name', 'url', 'user', 'state']
 
     def create(self, validated_data):
         name = validated_data.get('name')
@@ -95,15 +102,65 @@ class ShopSerializer(serializers.ModelSerializer):
         request = self.context['request']
         user_id = get_username(request)
 
-        categories = validated_data.get('categories')
+        print(name, url, state, user_id)
 
-        shop = Shop.objects.create(name=name, url=url, user_id=user_id, state=state)
+        # stream = requests.get(url).content
+        #
+        #
+        # data = yaml.load(stream, Loader=SafeLoader)
+        #
+        # print(data)
 
-        for category in categories:
-            cat = Category.objects.create(id=category['id'], name=category['name'])
-            shop.categories.add(cat)
+        response = requests.get(url)
+        with open('file.yml', 'wb') as file:
+            file.write(response.content)
 
-        return shop
 
+
+
+
+        # categories = validated_data.get('categories')
+
+        # shop = Shop.objects.create(name=name, url=url, user_id=user_id, state=state)
+        #
+        # for category in categories:
+        #     cat = Category.objects.create(id=category['id'], name=category['name'])
+        #     shop.categories.add(cat)
+        #
+        # return shop
+
+
+# class CategorySerializer(serializers.Serializer):
+#     """Cериализатор для создания категорий (почему-то не мог записывать id используя ModelSerializer)"""
+#     id = serializers.IntegerField()
+#     name = serializers.CharField()
+#
+#
+# class ShopSerializer(serializers.ModelSerializer):
+#     """Класс создает магазин, категории товаров и делает связь между ними"""
+#
+#     # categories = CategorySerializer(many=True)
+#
+#     class Meta:
+#         model = Shop
+#         fields = ['name', 'url', 'user', 'state', 'categories']
+#
+#     def create(self, validated_data):
+#         name = validated_data.get('name')
+#         url = validated_data.get('url')  # Адрес магазина
+#         state = True  # Указываем, что магазин активен
+#
+#         request = self.context['request']
+#         user_id = get_username(request)
+#
+#         categories = validated_data.get('categories')
+#
+#         shop = Shop.objects.create(name=name, url=url, user_id=user_id, state=state)
+#
+#         for category in categories:
+#             cat = Category.objects.create(id=category['id'], name=category['name'])
+#             shop.categories.add(cat)
+#
+#         return shop
 
 

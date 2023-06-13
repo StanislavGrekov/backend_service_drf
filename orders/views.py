@@ -17,6 +17,7 @@ class Index(APIView):
 # Работа с пользователем
 
 class UserList(ListAPIView):
+    "Получение списка пользователей"
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -31,7 +32,7 @@ class UserUpdate(UpdateAPIView):
     """Обновление пользователя"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
+    permission_classes = (IsAuthenticated,)
 
 class UserDetail(RetrieveAPIView):
     """Информация о пользователе"""
@@ -42,6 +43,7 @@ class UserDestroy(DestroyAPIView):
     """Удаление пользователя"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
 
 # Работа с контактом
 

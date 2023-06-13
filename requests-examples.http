@@ -23,6 +23,8 @@ Content-Type: application/json
   "password": "123"
 }
 
+
+
 ###
 
 # Запрос№1. на получение списка пользователей
@@ -32,7 +34,7 @@ Content-Type: application/json
 ###
 
 # Запрос№2. на получение информации о пользователе
-GET {{baseUrl}}user/detail/9/
+GET {{baseUrl}}user/detail/1/
 Content-Type: application/json
 
 ###
@@ -52,26 +54,27 @@ Content-Type: application/json
 ###
 
 # Запрос№4. на изменение пользователя
-PATCH {{baseUrl}}user/update/34/
+PATCH {{baseUrl}}user/update/1/
 Content-Type: application/json
+Authorization: Token 2fb84090b2e8acbdf874f092738408a28af16427
 
 {
-  "email": "stas.ik1987@yandex.ru",
-  "password": "1667992"
+  "password": "123"
 }
 
 ###
 
 # Запрос№5. на удаление пользователя
-DELETE {{baseUrl}}user/delete/34/
+DELETE {{baseUrl}}user/delete/1/
 Content-Type: application/json
+Authorization: Token a97708e55f33125be3c8b0ae9046e2f67367ef03
 
 ###
 
 # Запрос№6 Создание контакта
 POST {{baseUrl}}contact/create/
 Content-Type: application/json
-Authorization: Token cff1f4da895b99c4315e0842236b87649bc5e0fd
+Authorization: Token c55e6c85967ac29776ebe9691f0db2ca409766b1
 
 {
   "city": "Миасс",
@@ -84,15 +87,33 @@ Authorization: Token cff1f4da895b99c4315e0842236b87649bc5e0fd
 }
 
 ###
+# Запрос№6. Создание магазина
+POST {{baseUrl}}shop/create/
+Content-Type: application/json
+Authorization: Token c55e6c85967ac29776ebe9691f0db2ca409766b1
+
+{
+  "name": "РБТ",
+  "url": "https://disk.yandex.ru/d/rDR2FOl9UdLwJQ",
+  "state": "True"
+}
+###
+
+
+
+
+
+
+
 
 # Запрос№6. Создание магазина
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token cff1f4da895b99c4315e0842236b87649bc5e0fd
+Authorization: Token c55e6c85967ac29776ebe9691f0db2ca409766b1
 
 {
   "name": "РБТ",
-  "url": "http://svaznoy.ru",
+  "url": "https://disk.yandex.ru/d/rDR2FOl9UdLwJQ",
   "categories": [
     {
      "id": "224",
