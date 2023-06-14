@@ -63,12 +63,13 @@ class ContactCreate(ListCreateAPIView):
 # Работа с магазином
 
 class ShopCreate(ListCreateAPIView):
-    """Создание магазина"""
+    """Создание магазина, заполнение таблиц из прайса"""
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
     permission_classes = (IsAuthenticated,)
 
-class ShopDetail(ListAPIView):
-    """Информация о магазинах"""
+class ShopDestroy(DestroyAPIView):
+    """Удаление магазина, удаление товаров"""
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
+    permission_classes = (IsAuthenticated,)

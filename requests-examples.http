@@ -44,7 +44,7 @@ POST {{baseUrl}}user/create/
 Content-Type: application/json
 
 {
-  "username": "St",
+  "username": "Stas",
   "first_name": "Станислав",
   "last_name": "Греков",
   "email": "stas.ik1987@yandex.ru",
@@ -87,18 +87,24 @@ Authorization: Token c55e6c85967ac29776ebe9691f0db2ca409766b1
 }
 
 ###
-# Запрос№6. Создание магазина
+# Запрос№6. Запрос на создание магазина
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token 3d3c46363316fbe3c58ddd9b2c9ea7a28d92371e
+Authorization: Token 4f04768365771e8d49d4e43c7cdce8495a905af7
 
 {
   "name": "РБТ",
-  "url": "https://raw.githubusercontent.com/netology-code/python-final-diplom/master/data/shop1.yaml",
+  "url": "https://raw.githubusercontent.com/StanislavGrekov/my_diplom_drf/master/shop1.yaml",
   "state": "True"
 }
 ###
 
+# Запрос№7. Запрос на удаление магазина
+DELETE {{baseUrl}}shop/delete/4/
+Content-Type: application/json
+Authorization: Token 4f04768365771e8d49d4e43c7cdce8495a905af7
+
+###
 
 
 

@@ -125,8 +125,12 @@ class ShopSerializer(serializers.ModelSerializer):
                 ProductParameter.objects.create(product_info_id=product_info.id,
                                                 name=key,
                                                 value=value)
-
         return shop
+
+    def destroy(self, request, *args, **kwargs):
+        data = Shop.objects.get(kwargs.get('pk'))
+        print(data)
+
 
 # class CategorySerializer(serializers.Serializer):
 #     """Cериализатор для создания категорий (почему-то не мог записывать id используя ModelSerializer)"""

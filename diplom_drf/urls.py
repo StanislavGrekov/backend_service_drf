@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
-from orders.views import Index, UserList, UserCreate, UserDetail, UserUpdate, UserDestroy, ShopCreate, ShopDetail, ContactCreate
+from orders.views import Index, UserList, UserCreate, UserDetail, UserUpdate, UserDestroy, ShopCreate, ShopDestroy, ContactCreate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,7 +33,7 @@ urlpatterns = [
     path('api/contact/create/', ContactCreate.as_view()),
     # path('api/user/update/<int:pk>/', UserUpdate.as_view()),
 
-    # Пути для создания магазина
+    # Пути для создания/удаления магазина
     path('api/shop/create/', ShopCreate.as_view()),
-    path('api/shop/list/', ShopDetail.as_view()),
+    path('api/shop/delete/<int:pk>/', ShopDestroy.as_view()),
 ]
