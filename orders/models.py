@@ -23,7 +23,7 @@ class Shop(models.Model):
                                 blank=True, null=True,
                                 on_delete=models.CASCADE)
     state = models.BooleanField(verbose_name='статус получения заказов', default=True)
-
+    time_create = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Магазин'
@@ -51,6 +51,7 @@ class Product(models.Model):
     name = models.CharField(max_length=80, verbose_name='Название')
     category = models.ForeignKey(Category, verbose_name='Категория', related_name='products', blank=True,
                                  on_delete=models.CASCADE)
+    time_create = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Продукт'
@@ -80,24 +81,10 @@ class ProductInfo(models.Model):
         ]
 
 
-# class Parameter(models.Model):
-#     name = models.CharField(max_length=40, verbose_name='Название')
-#
-#     class Meta:
-#         verbose_name = 'Имя параметра'
-#         verbose_name_plural = "Список имен параметров"
-#         ordering = ('-name',)
-#
-#     def __str__(self):
-#         return self.name
-
-
 class ProductParameter(models.Model):
     product_info = models.ForeignKey(ProductInfo, verbose_name='Информация о продукте',
                                      related_name='product_parameters', blank=True,
                                      on_delete=models.CASCADE)
-    # parameter = models.ForeignKey(Parameter, verbose_name='Параметр', related_name='product_parameters', blank=True,
-    #                               on_delete=models.CASCADE)
     name = models.CharField(max_length=40, verbose_name='Название')
     value = models.CharField(verbose_name='Значение', max_length=100)
 
@@ -105,9 +92,6 @@ class ProductParameter(models.Model):
     class Meta:
         verbose_name = 'Параметр'
         verbose_name_plural = "Список параметров"
-        # constraints = [
-        #     models.UniqueConstraint(fields=['product_info', 'parameter'], name='unique_product_parameter'),
-        # ]
 
 
 class Contact(models.Model):
@@ -122,6 +106,7 @@ class Contact(models.Model):
     building = models.CharField(max_length=15, verbose_name='Строение', blank=True)
     apartment = models.CharField(max_length=15, verbose_name='Квартира', blank=True)
     phone = models.CharField(max_length=20, verbose_name='Телефон')
+    time_create = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Контакты пользователя'

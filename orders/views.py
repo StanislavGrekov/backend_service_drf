@@ -1,12 +1,15 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.permissions import IsAuthenticated
+from orders.permissions import IsOwner
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth.models import User
+from orders.serializers import get_username
+
 from .serializers import UserSerializer, ShopSerializer, ContactSerializer
-from orders.models import Shop, Contact
-from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
+from orders.models import Shop, Contact, Category, Product
+
+
 
 class Index(APIView):
     permission_classes = (IsAuthenticated,)
@@ -53,13 +56,6 @@ class ContactCreate(ListCreateAPIView):
     serializer_class = ContactSerializer
     permission_classes = (IsAuthenticated,)
 
-
-# class ContactUpdate(UpdateAPIView):
-#     """Обновление пользователя"""
-#     queryset = Contact.objects.all()
-#     serializer_class = ContactSerializer
-
-
 # Работа с магазином
 
 class ShopCreate(ListCreateAPIView):
@@ -68,8 +64,19 @@ class ShopCreate(ListCreateAPIView):
     serializer_class = ShopSerializer
     permission_classes = (IsAuthenticated,)
 
-class ShopDestroy(DestroyAPIView):
-    """Удаление магазина, удаление товаров"""
-    queryset = Shop.objects.all()
-    serializer_class = ShopSerializer
-    permission_classes = (IsAuthenticated,)
+
+class ShopDestroy(APIView):
+    """Удаление магазина и всех товаров"""
+
+    def delete(self, request, pk=None):
+        shops = Shop.objects.filter(id=pk)
+        if not shops:
+            return Response({"Ответ": "Магазин не найден!"})
+        else:
+            for shop in shops:
+                categories = Category.objects.filter(shops=shop.id)
+                for cat in categories:
+                    Product.objects.filter(category_id=cat.id).delete()
+                categories.delete()
+            shops.delete()
+            return Response({'Ответ': "Магазин и все сопутствующие товары удалены!"})

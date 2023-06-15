@@ -87,10 +87,10 @@ Authorization: Token c55e6c85967ac29776ebe9691f0db2ca409766b1
 }
 
 ###
-# Запрос№6. Запрос на создание магазина
+# Запрос№6. Запрос на создание магазина и загрузку товара из прайса
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token 4f04768365771e8d49d4e43c7cdce8495a905af7
+Authorization: Token 0d49a8116bd6ce886c1dcf2e9e1b407b2a663b56
 
 {
   "name": "РБТ",
@@ -99,10 +99,10 @@ Authorization: Token 4f04768365771e8d49d4e43c7cdce8495a905af7
 }
 ###
 
-# Запрос№7. Запрос на удаление магазина
-DELETE {{baseUrl}}shop/delete/4/
+# Запрос№7. Запрос на удаление магазина и товаров
+DELETE {{baseUrl}}shop/delete/3/
 Content-Type: application/json
-Authorization: Token 4f04768365771e8d49d4e43c7cdce8495a905af7
+
 
 ###
 

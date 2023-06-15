@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.decorators import api_view, action
 from rest_framework.serializers import ValidationError
 from django.contrib.auth.models import User
 from orders.models import Shop, Category, Contact, Product, ProductInfo, ProductParameter
@@ -127,9 +128,35 @@ class ShopSerializer(serializers.ModelSerializer):
                                                 value=value)
         return shop
 
-    def destroy(self, request, *args, **kwargs):
-        data = Shop.objects.get(kwargs.get('pk'))
-        print(data)
+
+    # def destroy(self, request, *args, **kwargs):
+    #     id = Shop.objects.filter(id=kwargs.get['pk'])
+    #     print(id)
+
+
+    # def delete(self, request, *args, **kwargs):
+    #     if request.method == "DELETE":
+    #         id = Shop.objects.filter(id=kwargs.get['pk'])
+    #         print(id)
+
+
+# class ShopSerializerDelete(serializers.Serializer):
+#
+#     # class Meta:
+#     #     model = Shop
+#     #     fields = ['name', 'url', 'user', 'state']
+#
+#
+#
+#     def delete(self, request, pk):
+#         if request.method == "DELETE":
+#             print(pk)
+
+    # @api_view(["DELETE"])
+    # def delete_rest_endpoint(request, pk):
+    #     print(pk)
+    #     Shop.objects.get(id=pk).delete()
+    #     return Response()
 
 
 # class CategorySerializer(serializers.Serializer):
