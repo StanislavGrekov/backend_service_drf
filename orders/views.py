@@ -1,14 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from orders.permissions import IsOwner
+from orders.permissions import IsOwnerShop
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth.models import User
 from orders.serializers import get_username
 
-from .serializers import UserSerializer, ShopSerializer, ContactSerializer
-from orders.models import Shop, Contact, Category, Product
-
+from .serializers import UserSerializer, ShopSerializer, ContactSerializer, ProductSerializer
+from orders.models import Shop, Contact, Category, Product, ProductInfo
 
 
 class Index(APIView):
@@ -68,6 +67,8 @@ class ShopCreate(ListCreateAPIView):
 class ShopDestroy(APIView):
     """Удаление магазина и всех товаров"""
 
+    permission_classes = (IsAuthenticated,)
+
     def delete(self, request, pk=None):
         shops = Shop.objects.filter(id=pk)
         if not shops:
@@ -80,3 +81,11 @@ class ShopDestroy(APIView):
                 categories.delete()
             shops.delete()
             return Response({'Ответ': "Магазин и все сопутствующие товары удалены!"})
+
+
+# Работа с товарами
+
+class ListProductView(ListAPIView):
+    queryset = ProductInfo.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = (IsAuthenticated,)

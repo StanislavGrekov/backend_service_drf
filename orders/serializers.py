@@ -8,12 +8,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.http import JsonResponse
 from orders.signal import create_send_mail, update_send_mail
-# from yaml import load as load_yaml, Loader
 import yaml
 from yaml.loader import Loader
 import requests
-import urllib.request
-import os
 
 
 def get_username(request):
@@ -79,13 +76,6 @@ class ContactSerializer(serializers.ModelSerializer):
         return contact
 
 
-
-# class CategorySerializer(serializers.Serializer):
-#     """Cериализатор для создания категорий (почему-то не мог записывать id используя ModelSerializer)"""
-#     id = serializers.IntegerField()
-#     name = serializers.CharField()
-
-
 class ShopSerializer(serializers.ModelSerializer):
     """Класс создает магазин, категории товаров и делает связь между ними"""
 
@@ -128,68 +118,23 @@ class ShopSerializer(serializers.ModelSerializer):
                                                 value=value)
         return shop
 
+class miniShopSerializer(serializers.ModelSerializer):
 
-    # def destroy(self, request, *args, **kwargs):
-    #     id = Shop.objects.filter(id=kwargs.get['pk'])
-    #     print(id)
-
-
-    # def delete(self, request, *args, **kwargs):
-    #     if request.method == "DELETE":
-    #         id = Shop.objects.filter(id=kwargs.get['pk'])
-    #         print(id)
+    class Meta:
+        model = Shop
+        fields = ['name']
 
 
-# class ShopSerializerDelete(serializers.Serializer):
-#
-#     # class Meta:
-#     #     model = Shop
-#     #     fields = ['name', 'url', 'user', 'state']
-#
-#
-#
-#     def delete(self, request, pk):
-#         if request.method == "DELETE":
-#             print(pk)
+class ProductParametrsSerializer(serializers.ModelSerializer):
 
-    # @api_view(["DELETE"])
-    # def delete_rest_endpoint(request, pk):
-    #     print(pk)
-    #     Shop.objects.get(id=pk).delete()
-    #     return Response()
+    class Meta:
+        model = ProductParameter
+        fields = ['name', 'value']
 
+class ProductSerializer(serializers.ModelSerializer):
 
-# class CategorySerializer(serializers.Serializer):
-#     """Cериализатор для создания категорий (почему-то не мог записывать id используя ModelSerializer)"""
-#     id = serializers.IntegerField()
-#     name = serializers.CharField()
-#
-#
-# class ShopSerializer(serializers.ModelSerializer):
-#     """Класс создает магазин, категории товаров и делает связь между ними"""
-#
-#     # categories = CategorySerializer(many=True)
-#
-#     class Meta:
-#         model = Shop
-#         fields = ['name', 'url', 'user', 'state', 'categories']
-#
-#     def create(self, validated_data):
-#         name = validated_data.get('name')
-#         url = validated_data.get('url')  # Адрес магазина
-#         state = True  # Указываем, что магазин активен
-#
-#         request = self.context['request']
-#         user_id = get_username(request)
-#
-#         categories = validated_data.get('categories')
-#
-#         shop = Shop.objects.create(name=name, url=url, user_id=user_id, state=state)
-#
-#         for category in categories:
-#             cat = Category.objects.create(id=category['id'], name=category['name'])
-#             shop.categories.add(cat)
-#
-#         return shop
+    class Meta:
+        model = ProductInfo
+        fields = ['model', 'quantity', 'price_rrc', 'product_parameters',]
 
-
+    product_parameters = ProductParametrsSerializer(many=True)

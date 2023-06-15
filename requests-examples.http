@@ -44,7 +44,7 @@ POST {{baseUrl}}user/create/
 Content-Type: application/json
 
 {
-  "username": "Stas",
+  "username": "Stason",
   "first_name": "Станислав",
   "last_name": "Греков",
   "email": "stas.ik1987@yandex.ru",
@@ -74,7 +74,7 @@ Authorization: Token a97708e55f33125be3c8b0ae9046e2f67367ef03
 # Запрос№6 Создание контакта
 POST {{baseUrl}}contact/create/
 Content-Type: application/json
-Authorization: Token c55e6c85967ac29776ebe9691f0db2ca409766b1
+Authorization: Token 8a59acd774b2f847c44408b60d971b06a912b3ab
 
 {
   "city": "Миасс",
@@ -90,7 +90,7 @@ Authorization: Token c55e6c85967ac29776ebe9691f0db2ca409766b1
 # Запрос№6. Запрос на создание магазина и загрузку товара из прайса
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token 0d49a8116bd6ce886c1dcf2e9e1b407b2a663b56
+Authorization: Token 5bafb6de28db46ea5b09d9362c47f13f1ff3fcdf
 
 {
   "name": "РБТ",
@@ -100,13 +100,17 @@ Authorization: Token 0d49a8116bd6ce886c1dcf2e9e1b407b2a663b56
 ###
 
 # Запрос№7. Запрос на удаление магазина и товаров
-DELETE {{baseUrl}}shop/delete/3/
+DELETE {{baseUrl}}shop/delete/4/
 Content-Type: application/json
-
+Authorization: Token 8a59acd774b2f847c44408b60d971b06a912b
 
 ###
 
-
+# Запрос№. на получение списка товаров
+GET {{baseUrl}}product/list/
+Content-Type: application/json
+Authorization: Token 5bafb6de28db46ea5b09d9362c47f13f1ff3fcdf
+###
 
 
 
