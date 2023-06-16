@@ -19,7 +19,7 @@ from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
 from orders.views import Index, UserList, UserCreate, UserDetail, UserUpdate, UserDestroy, ShopCreate, \
-    ShopDestroy, ContactCreate, ListProductView
+    ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,12 +32,14 @@ urlpatterns = [
 
     # Пути для работы с контактом
     path('api/contact/create/', ContactCreate.as_view()),
-    # path('api/user/update/<int:pk>/', UserUpdate.as_view()),
+    path('api/contact/update/<int:pk>/', ContactUpdate.as_view()),
 
     # Пути для создания/удаления магазина
     path('api/shop/create/', ShopCreate.as_view()),
     path('api/shop/delete/<int:pk>/', ShopDestroy.as_view()),
 
-    # Пути для получения товара
+    # Пути для получения и фильтрации товара
     path('api/product/list/', ListProductView.as_view()),
+    path('api/product/list/date/', ListProductDateView.as_view()),
+    path('api/category/list/', ListCategoryView.as_view())
 ]

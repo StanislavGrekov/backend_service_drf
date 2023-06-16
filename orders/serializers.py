@@ -56,7 +56,7 @@ class ContactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contact
-        fields = ['city', 'street', 'house', 'structure', 'building', 'apartment',  'phone', 'user']
+        fields = ['id', 'city', 'street', 'house', 'structure', 'building', 'apartment',  'phone', 'user']
 
     def create(self, validated_data):
         city = validated_data.get('city')
@@ -75,6 +75,16 @@ class ContactSerializer(serializers.ModelSerializer):
 
         return contact
 
+    # def update(self, instance, validated_data):
+    #     super().update(instance, validated_data)
+
+        # token_old = Token.objects.get(user=user)
+        # token_old.delete()
+        #
+        # token_new = Token.objects.create(user=user)
+        # update_send_mail(user.email, user.first_name, user.last_name, token_new)
+
+        # return contact
 
 class ShopSerializer(serializers.ModelSerializer):
     """Класс создает магазин, категории товаров и делает связь между ними"""
@@ -118,23 +128,37 @@ class ShopSerializer(serializers.ModelSerializer):
                                                 value=value)
         return shop
 
-class miniShopSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = Shop
-        fields = ['name']
-
-
-class ProductParametrsSerializer(serializers.ModelSerializer):
-
+class ParametrsSerializerFORProduct(serializers.ModelSerializer):
+    """Сериализатор для отображения информации по техническим характеристикам (Используется для фильтрации по продуктам)"""
     class Meta:
         model = ProductParameter
         fields = ['name', 'value']
 
-class ProductSerializer(serializers.ModelSerializer):
 
+class ProductSerializer(serializers.ModelSerializer):
+    """Сериализатор для отображения информации по продуктам"""
     class Meta:
         model = ProductInfo
         fields = ['model', 'quantity', 'price_rrc', 'product_parameters',]
 
-    product_parameters = ProductParametrsSerializer(many=True)
+    product_parameters = ParametrsSerializerFORProduct(many=True)
+
+
+class ParametrsSerializerFORCategory(serializers.ModelSerializer):
+    """Сериализатор для отображения информации по продуктам (Используется для фильтрации по категориям)"""
+    class Meta:
+        model = ProductParameter
+        fields = ['name','product_infos',]
+
+    product_infos =  ProductSerializer(many=True)
+
+
+class CategorySerializers(serializers.ModelSerializer):
+    """Сериализатор для отображения информации по категориям """
+    class Meta:
+        model = Category
+        fields = ['name', 'products']
+
+    products =ParametrsSerializerFORCategory(many=True)
+

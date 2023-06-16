@@ -51,7 +51,6 @@ class Product(models.Model):
     name = models.CharField(max_length=80, verbose_name='Название')
     category = models.ForeignKey(Category, verbose_name='Категория', related_name='products', blank=True,
                                  on_delete=models.CASCADE)
-    time_create = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Продукт'
@@ -72,6 +71,8 @@ class ProductInfo(models.Model):
     quantity = models.PositiveIntegerField(verbose_name='Количество')
     price = models.PositiveIntegerField(verbose_name='Цена')
     price_rrc = models.PositiveIntegerField(verbose_name='Рекомендуемая розничная цена')
+    time_create = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         verbose_name = 'Информация о продукте'

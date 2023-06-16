@@ -1,14 +1,16 @@
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from orders.permissions import IsOwnerShop
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth.models import User
-from orders.serializers import get_username
+from orders.filters import ProductFilter
 
-from .serializers import UserSerializer, ShopSerializer, ContactSerializer, ProductSerializer
+
+
+from .serializers import UserSerializer, ShopSerializer, ContactSerializer, ProductSerializer, CategorySerializers
 from orders.models import Shop, Contact, Category, Product, ProductInfo
-
+from django.core.exceptions import ObjectDoesNotExist
 
 class Index(APIView):
     permission_classes = (IsAuthenticated,)
@@ -50,10 +52,17 @@ class UserDestroy(DestroyAPIView):
 # Работа с контактом
 
 class ContactCreate(ListCreateAPIView):
-    """Создание пользователя"""
+    """Создание контакта"""
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
     permission_classes = (IsAuthenticated,)
+
+class ContactUpdate(UpdateAPIView):
+    """Обновление контакта"""
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
+    permission_classes = (IsAuthenticated,)
+
 
 # Работа с магазином
 
@@ -70,22 +79,41 @@ class ShopDestroy(APIView):
     permission_classes = (IsAuthenticated,)
 
     def delete(self, request, pk=None):
-        shops = Shop.objects.filter(id=pk)
-        if not shops:
-            return Response({"Ответ": "Магазин не найден!"})
-        else:
-            for shop in shops:
-                categories = Category.objects.filter(shops=shop.id)
-                for cat in categories:
-                    Product.objects.filter(category_id=cat.id).delete()
-                categories.delete()
-            shops.delete()
+        try:
+            shop = Shop.objects.get(id=pk)
+            categories = Category.objects.filter(shops=shop.id)
+            for cat in categories:
+                Product.objects.filter(category_id=cat.id).delete()
+            categories.delete()
+            shop.delete()
             return Response({'Ответ': "Магазин и все сопутствующие товары удалены!"})
+        except ObjectDoesNotExist:
+            return Response({"Ответ": "Магазин не найден!"})
 
 
-# Работа с товарами
+# Классы для работы с товаром, получение товара и фильтрация
 
 class ListProductView(ListAPIView):
     queryset = ProductInfo.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (IsAuthenticated,)
+
+    filter_backends = [SearchFilter,]
+    search_fields = ['model', 'price_rrc']
+    ordering_filds = ['time_create']
+
+
+class ListProductDateView(ListAPIView):
+    queryset = ProductInfo.objects.all()
+    serializer_class = ProductSerializer
+
+    permission_classes = (IsAuthenticated,)
+    filterset_class = ProductFilter
+
+class ListCategoryView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializers
+    permission_classes = (IsAuthenticated,)
+
+    filter_backends = [SearchFilter,]
+    search_fields = ['name',]

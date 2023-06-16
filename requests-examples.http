@@ -74,7 +74,7 @@ Authorization: Token a97708e55f33125be3c8b0ae9046e2f67367ef03
 # Запрос№6 Создание контакта
 POST {{baseUrl}}contact/create/
 Content-Type: application/json
-Authorization: Token 8a59acd774b2f847c44408b60d971b06a912b3ab
+Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
 
 {
   "city": "Миасс",
@@ -87,30 +87,89 @@ Authorization: Token 8a59acd774b2f847c44408b60d971b06a912b3ab
 }
 
 ###
+
+# Запрос№. На изменение контакта
+PATCH {{baseUrl}}contact/update/3/
+Content-Type: application/json
+Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
+
+{
+  "city": "Кайгородово"
+}
+
+
+
+################# Запросы на создание и удаление магазина #################
+
 # Запрос№6. Запрос на создание магазина и загрузку товара из прайса
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token 5bafb6de28db46ea5b09d9362c47f13f1ff3fcdf
+Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
 
 {
   "name": "РБТ",
   "url": "https://raw.githubusercontent.com/StanislavGrekov/my_diplom_drf/master/shop1.yaml",
   "state": "True"
 }
-###
 
+###
 # Запрос№7. Запрос на удаление магазина и товаров
 DELETE {{baseUrl}}shop/delete/4/
 Content-Type: application/json
-Authorization: Token 8a59acd774b2f847c44408b60d971b06a912b
-
+Authorization: Token 3cd3590ae70ea3d64281c3882e7007494057a2f4
 ###
 
-# Запрос№. на получение списка товаров
+
+############### Запросы на получение товара ##############
+
+# Запрос№. на получение списка товаров (все товары)
 GET {{baseUrl}}product/list/
 Content-Type: application/json
-Authorization: Token 5bafb6de28db46ea5b09d9362c47f13f1ff3fcdf
+Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
+
 ###
+# Запрос№. Фильтрация по модели (вхождение текста)
+GET {{baseUrl}}product/list/?search=xs-max
+Content-Type: application/json
+Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
+
+###
+# Запрос№. Фильтрация по стоимости (вхождение текста)
+GET {{baseUrl}}product/list/?search=1300
+Content-Type: application/json
+Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
+
+###
+# Запрос№. Фильтрация по дате
+GET {{baseUrl}}product/list/date/?time_create_after=2023-06-15&&time_create_before=2023-06-16
+Content-Type: application/json
+Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
+
+###
+# Запрос№. Фильтрация по категориям (вхождение текста)
+GET {{baseUrl}}category/list/?search=Аксессуары
+Content-Type: application/json
+Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -143,6 +202,13 @@ GET {{baseUrl}}shop/list/
 Content-Type: application/json
 
 ###
+
+
+
+
+
+
+
 
 
 
