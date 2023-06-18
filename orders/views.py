@@ -4,21 +4,18 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth.models import User
-from orders.filters import ProductFilter
+# from orders.filters import ProductFilter
 
 
 
-from .serializers import UserSerializer, ShopSerializer, ContactSerializer, ProductSerializer, CategorySerializers
+from .serializers import UserSerializer, ShopSerializer, ContactSerializer, ProductSerializer, CategorySerializers, \
+    ShopSerializersFORFilters, ArticleSerializer
 from orders.models import Shop, Contact, Category, Product, ProductInfo
 from django.core.exceptions import ObjectDoesNotExist
 
-class Index(APIView):
-    permission_classes = (IsAuthenticated,)
-    def get(self, request):
-        content = {'message': 'Hello, World!'}
-        return Response(content)
 
-# Работа с пользователем
+
+########################### Работа с пользователем##################
 
 class UserList(ListAPIView):
     "Получение списка пользователей"
@@ -49,7 +46,7 @@ class UserDestroy(DestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
-# Работа с контактом
+############################# Работа с контактом#####################
 
 class ContactCreate(ListCreateAPIView):
     """Создание контакта"""
@@ -64,7 +61,7 @@ class ContactUpdate(UpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
 
-# Работа с магазином
+############################### Работа с магазином##########################
 
 class ShopCreate(ListCreateAPIView):
     """Создание магазина, заполнение таблиц из прайса"""
@@ -90,10 +87,34 @@ class ShopDestroy(APIView):
         except ObjectDoesNotExist:
             return Response({"Ответ": "Магазин не найден!"})
 
+############################### Работа с заказами###################
 
-# Классы для работы с товаром, получение товара и фильтрация
+class CreateOrderItem(APIView):
+    """Создание единицы заказа"""
+
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+
+        article = request.data.get('articles')
+
+        serializer = ArticleSerializer(data=article)
+        if serializer.is_valid(raise_exception=True):
+            print(article)
+
+        return Response({"Ответ": "Магазин не найден!"})
+
+
+
+
+
+
+
+
+###################### Классы для работы с товаром. Получение товара и фильтрация##################
 
 class ListProductView(ListAPIView):
+    """Список товаров, фильтрацией по модели и цене"""
     queryset = ProductInfo.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (IsAuthenticated,)
@@ -104,15 +125,26 @@ class ListProductView(ListAPIView):
 
 
 class ListProductDateView(ListAPIView):
+    """Фильтрация по дате"""
     queryset = ProductInfo.objects.all()
     serializer_class = ProductSerializer
 
     permission_classes = (IsAuthenticated,)
-    filterset_class = ProductFilter
+    # filterset_class = ProductFilter
 
 class ListCategoryView(ListAPIView):
+    """Фильтрация по категориям"""
     queryset = Category.objects.all()
     serializer_class = CategorySerializers
+    permission_classes = (IsAuthenticated,)
+
+    filter_backends = [SearchFilter,]
+    search_fields = ['name',]
+
+class ListShopView(ListAPIView):
+    """Фильтрация по Магазину"""
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializersFORFilters
     permission_classes = (IsAuthenticated,)
 
     filter_backends = [SearchFilter,]

@@ -18,8 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
-from orders.views import Index, UserList, UserCreate, UserDetail, UserUpdate, UserDestroy, ShopCreate, \
-    ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView
+from orders.views import UserList, UserCreate, UserDetail, UserUpdate, UserDestroy, ShopCreate, \
+    ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView, ListShopView, \
+    CreateOrderItem
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,7 +42,10 @@ urlpatterns = [
     path('api/shop/delete/<int:pk>/', ShopDestroy.as_view()),
 
     # Пути для получения и фильтрации товара
-    path('api/product/list/', ListProductView.as_view()),
-    path('api/product/list/date/', ListProductDateView.as_view()),
-    path('api/category/list/', ListCategoryView.as_view())
+    path('api/product/list/', ListProductView.as_view()), # Список товара
+    path('api/product/list/date/', ListProductDateView.as_view()), # Фильтр по дате
+    path('api/category/list/', ListCategoryView.as_view()), # Фильтр по категориям
+    path('api/shop/list/', ListShopView.as_view()), # Фильтр по магазинам
+
+    path('api/order/create/', CreateOrderItem.as_view()),
 ]

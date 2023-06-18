@@ -89,8 +89,6 @@ class ContactSerializer(serializers.ModelSerializer):
 class ShopSerializer(serializers.ModelSerializer):
     """Класс создает магазин, категории товаров и делает связь между ними"""
 
-    # categories = CategorySerializer(many=True)
-
     class Meta:
         model = Shop
         fields = ['name', 'url', 'user', 'state']
@@ -130,7 +128,7 @@ class ShopSerializer(serializers.ModelSerializer):
 
 
 class ParametrsSerializerFORProduct(serializers.ModelSerializer):
-    """Сериализатор для отображения информации по техническим характеристикам (Используется для фильтрации по продуктам)"""
+    """Сериализатор для отображения информации по техническим характеристикам товара (Используется для фильтрации по продуктам)"""
     class Meta:
         model = ProductParameter
         fields = ['name', 'value']
@@ -151,7 +149,7 @@ class ParametrsSerializerFORCategory(serializers.ModelSerializer):
         model = ProductParameter
         fields = ['name','product_infos',]
 
-    product_infos =  ProductSerializer(many=True)
+    product_infos = ProductSerializer(many=True)
 
 
 class CategorySerializers(serializers.ModelSerializer):
@@ -162,3 +160,17 @@ class CategorySerializers(serializers.ModelSerializer):
 
     products =ParametrsSerializerFORCategory(many=True)
 
+
+class ShopSerializersFORFilters(serializers.ModelSerializer):
+    """Сериализатор для отображения информации по магазинам """
+    class Meta:
+        model = Shop
+        fields = ['name', 'product_infos']
+
+    product_infos = ProductSerializer(many=True)
+
+
+class ArticleSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=120)
+    description = serializers.CharField()
+    body = serializers.CharField()
