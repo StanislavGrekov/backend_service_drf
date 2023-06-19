@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.decorators import api_view, action
 from rest_framework.serializers import ValidationError
 from django.contrib.auth.models import User
-from orders.models import Shop, Category, Contact, Product, ProductInfo, ProductParameter
+from orders.models import Shop, Category, Contact, Product, ProductInfo, ProductParameter, OrderItem, Order
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -75,16 +75,6 @@ class ContactSerializer(serializers.ModelSerializer):
 
         return contact
 
-    # def update(self, instance, validated_data):
-    #     super().update(instance, validated_data)
-
-        # token_old = Token.objects.get(user=user)
-        # token_old.delete()
-        #
-        # token_new = Token.objects.create(user=user)
-        # update_send_mail(user.email, user.first_name, user.last_name, token_new)
-
-        # return contact
 
 class ShopSerializer(serializers.ModelSerializer):
     """Класс создает магазин, категории товаров и делает связь между ними"""
@@ -125,6 +115,29 @@ class ShopSerializer(serializers.ModelSerializer):
                                                 name=key,
                                                 value=value)
         return shop
+
+
+
+class OrderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Order
+        fields = ['user', 'dt', 'state', 'contact']
+
+    user = UserSerializer()
+    contact = ContactSerializer()
+
+    def create(self, validated_data):
+        name = validated_data.get('state')
+        print(name)
+
+        request = self.context['request']
+        user_id = get_username(request)
+        print(user_id)
+
+        order = Order.object.create(user=1, state=name, contact=1)
+
+        return order
 
 
 class ParametrsSerializerFORProduct(serializers.ModelSerializer):
@@ -169,8 +182,3 @@ class ShopSerializersFORFilters(serializers.ModelSerializer):
 
     product_infos = ProductSerializer(many=True)
 
-
-class ArticleSerializer(serializers.Serializer):
-    title = serializers.CharField(max_length=120)
-    description = serializers.CharField()
-    body = serializers.CharField()

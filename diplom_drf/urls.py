@@ -19,8 +19,9 @@ from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
 from orders.views import UserList, UserCreate, UserDetail, UserUpdate, UserDestroy, ShopCreate, \
-    ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView, ListShopView, \
-    CreateOrderItem
+    ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView, ListShopView, OrderItemCreate
+    # hello_world
+
 
 
 
@@ -47,5 +48,7 @@ urlpatterns = [
     path('api/category/list/', ListCategoryView.as_view()), # Фильтр по категориям
     path('api/shop/list/', ListShopView.as_view()), # Фильтр по магазинам
 
-    path('api/order/create/', CreateOrderItem.as_view()),
+    # path('api/order/list/', hello_world),
+    path('api/order/list/', OrderItemCreate.as_view()), # Список заказов
+    path('api/order/create/', OrderItemCreate.as_view()),
 ]

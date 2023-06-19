@@ -74,7 +74,7 @@ Authorization: Token a97708e55f33125be3c8b0ae9046e2f67367ef03
 # Запрос№6 Создание контакта
 POST {{baseUrl}}contact/create/
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 
 {
   "city": "Миасс",
@@ -104,7 +104,7 @@ Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
 # Запрос№6. Запрос на создание магазина и загрузку товара из прайса
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 
 {
   "name": "Связной",
@@ -125,7 +125,7 @@ Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
 # Запрос№. на получение списка товаров (все товары)
 GET {{baseUrl}}product/list/
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 
 ###
 # Запрос№. Фильтрация по модели (вхождение текста)
@@ -153,30 +153,26 @@ Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
 
 ###
 # Запрос№. Фильтрация по магазинам (вхождение текста)
-GET {{baseUrl}}shop/list/?search=РБТ
+GET {{baseUrl}}shop/list/?search=Связной
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 
 
 ############### Создание заказа ##############
-# Запрос№. на получение списка товаров (все товары)
+###
+# Запрос№. 
+GET {{baseUrl}}order/list/
+Content-Type: application/json
+
+###
+# Запрос№6 Создание контакта
 POST {{baseUrl}}order/create/
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 
 {
-  "article": "Связной"
+  "state": "basket"
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
