@@ -122,22 +122,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['user', 'dt', 'state', 'contact']
+        fields = ['user', 'state', 'contact']
 
-    user = UserSerializer()
-    contact = ContactSerializer()
-
-    def create(self, validated_data):
-        name = validated_data.get('state')
-        print(name)
-
-        request = self.context['request']
-        user_id = get_username(request)
-        print(user_id)
-
-        order = Order.object.create(user=1, state=name, contact=1)
-
-        return order
+    # user = UserSerializer(read_only=True)
+    # contact = ContactSerializer(read_only=True)
 
 
 class ParametrsSerializerFORProduct(serializers.ModelSerializer):

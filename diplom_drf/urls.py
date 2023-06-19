@@ -48,7 +48,7 @@ urlpatterns = [
     path('api/category/list/', ListCategoryView.as_view()), # Фильтр по категориям
     path('api/shop/list/', ListShopView.as_view()), # Фильтр по магазинам
 
-    # path('api/order/list/', hello_world),
+    # Пути для создания заказа
     path('api/order/list/', OrderItemCreate.as_view()), # Список заказов
     path('api/order/create/', OrderItemCreate.as_view()),
 ]

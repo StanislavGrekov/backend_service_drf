@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from orders.filters import ProductFilter
 from rest_framework import serializers, status
 from ujson import loads as load_json
-
+from orders.serializers import get_username
 
 from .serializers import UserSerializer, ShopSerializer, ContactSerializer, ProductSerializer, CategorySerializers, \
     ShopSerializersFORFilters, OrderSerializer
@@ -93,97 +93,30 @@ class ShopDestroy(APIView):
 
 ############################### Работа с заказами###################
 
-
-# @api_view(['GET', 'POST'])
-# def hello_world(request):
-#     if request.method == 'GET':
-#         basket = OrderItem.objects.all()
-#
-#         serializer = OrderItemSerializer(basket, many=True)
-#
-#         return Response(serializer.data)
-#
-#     if request.method == 'POST':
-#
-#         serializer_class = OrderItemSerializer
-#         serializer = serializer_class(data=request.data)
-#         print(request.data)
-#         if serializer.is_valid():
-#             quantity = serializer.data.get('quantity')
-#
-#             return Response({"message": "Got some data!", "data": quantity})
-#
-#         return Response({"message": "Hello, world!"})
-
 class OrderItemCreate(ListCreateAPIView):
     """  """
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    # queryset = Order.objects.all()
+    # serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
 
-# class OrderItemCreate(APIView):
-#     def get(self, request, *args, **kwargs):
-#
-#         order = Order.objects.all()
-#         serializer = OrderSerializer(order, many=True)
-#
-#         return Response(serializer.data)
-#     #
-#     def post(self, request, *args, **kwargs):
-#         '''
-#
-#         '''
-#         serializer_class = OrderSerializer
-#         serializer = serializer_class(data=request.data)
-#
-#         if serializer.is_valid():
-#             state = serializer.data.get('state')
-#             return Response({"message": "Got some data!", "data": state})
-#
-#         return Response({'Status': False, 'Errors': 'Errors'})
+    def get(self, request, *args, **kwargs):
 
+        user_id = get_username(request)
 
-        # items_sting = request.data.get('username')
-        #
-        # print(items_sting)
-        #
-        #
-        # data = JSONParser().parse(request)
-        #
-        # print(data)
-        #
+        order = Order.objects.get(user_id=user_id)
+        serializer = OrderSerializer(order)
+        return Response(serializer.data)
 
-       # order = request.data.get('order')
-        # product_info = request.data.get('product_info')
-        # quantity = request.data.get('quantity')
-        #
-        # print(order, product_info, quantity)
+    def post(self, request, *args, **kwargs):
 
-        # items_sting = request.data.get('items')
-        # if items_sting:
-        #     try:
-        #         items_dict = load_json(items_sting)
-        #         print(items_dict)
-        #     except ValueError:
-        #         return JsonResponse({'Status': False, 'Errors': 'Неверный формат запроса'})
+        user_id = get_username(request)
 
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # serializer_class = OrderItemSerializer
-    #
-    # def post(self, request, format=None):
-    #
-    #     serializer = self.serializer_class(data=request.data)
-    #
-    #     if serializer.is_valid():
-    #         order = serializer.data.get('order')
-    #         product_info = serializer.data.get('product_info')
-    #         quantity = serializer.data.get('quantity')
-    #         element = OrderItem(order=order, product_info=product_info,quantity=quantity )
-    #         element.save()
-    #         return Response(status=status.HTTP_201_CREATED)
-    #
-    #     print(serializer.errors)
-    #     return Response({'Bad Request': "Invalid Data..."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 ###################### Классы для работы с товаром. Получение товара и фильтрация##################

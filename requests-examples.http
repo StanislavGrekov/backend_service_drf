@@ -163,113 +163,20 @@ Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 # Запрос№. 
 GET {{baseUrl}}order/list/
 Content-Type: application/json
+Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+
 
 ###
-# Запрос№6 Создание контакта
+# Запрос№6 Создание заказа
 POST {{baseUrl}}order/create/
 Content-Type: application/json
-Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
+Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
 
-{
-  "state": "basket"
+{ "contact":"1",
+  "state": "basket",
+  "user":"1"
 }
 
 
 
 
-
-
-
-# Запрос№6. Создание магазина
-POST {{baseUrl}}shop/create/
-Content-Type: application/json
-Authorization: Token c55e6c85967ac29776ebe9691f0db2ca409766b1
-
-{
-  "name": "РБТ",
-  "url": "https://disk.yandex.ru/d/rDR2FOl9UdLwJQ",
-  "categories": [
-    {
-     "id": "224",
-     "name": "Смартфоны"
-    },
-    {
-     "id": "15",
-     "name": "Аксессуары"
-    }
-  ]
-}
-###
-
-
-# Запрос№7. на получение списка магазинов
-GET {{baseUrl}}shop/list/
-Content-Type: application/json
-
-###
-
-
-
-
-
-
-
-
-
-
-
-
-###
-# Запрос№3. создание объявления пользователем №2
-POST {{baseUrl}}/advertisements/
-Content-Type: application/json
-Authorization: Token dc1e881246753e6d27ef954e807c6f4fb1ac3f97
-
-{
-  "title": "продам Телевизор",
-  "description": "Продама новый телевизор"
-}
-
-###
-# Запрос№4. Пользователь закрывает объявление.
-PATCH {{baseUrl}}/advertisements/23/
-Content-Type: application/json
-Authorization: Token dc1e881246753e6d27ef954e807c6f4fb1ac3f97
-
-{
-  "status": "CLOSED"
-}
-
-###
-# Запрос№5. Меняем объявление администратором
-PUT {{baseUrl}}/advertisements/23/
-Content-Type: application/json
-Authorization: Token bd56aa950eda45bf91890682866fa47e9802aaaf
-
-{
-  "title": "Продома Телевизор",
-  "description": "Продам новый телевизор (проверено)",
-  "open": true,
-  "status": "OPEN"
-}
-
-###
-# Запрос№6. Фильтрация по создателю
-GET {{baseUrl}}/advertisements/?creator=3
-Content-Type: application/json
-
-###
-# Запрос№7.Фильтрация по статусу
-GET {{baseUrl}}/advertisements/?status=OPEN
-Content-Type: application/json
-
-###
-# Запрос№8. Фильтрация по дате
-GET {{baseUrl}}/advertisements/?created_at_after=2023-02-21&&created_at_before=2023-02-26
-Content-Type: application/json
-
-###
-# Запрос№9. Удаление
-DELETE {{baseUrl}}/advertisements/26/
-Content-Type: application/json
-Authorization: Token bd56aa950eda45bf91890682866fa47e9802aaaf
