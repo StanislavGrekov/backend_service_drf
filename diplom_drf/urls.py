@@ -49,6 +49,6 @@ urlpatterns = [
     path('api/shop/list/', ListShopView.as_view()), # Фильтр по магазинам
 
     # Пути для создания заказа
-    path('api/order/list/', OrderItemCreate.as_view()), # Список заказов
-    path('api/order/create/', OrderItemCreate.as_view()),
+    path('api/basket/list/', OrderItemCreate.as_view()), # Просмотр корзины
+    path('api/basket/add/', OrderItemCreate.as_view()),
 ]

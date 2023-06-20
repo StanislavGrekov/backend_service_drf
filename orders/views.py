@@ -12,6 +12,7 @@ from orders.filters import ProductFilter
 from rest_framework import serializers, status
 from ujson import loads as load_json
 from orders.serializers import get_username
+from pprint import pprint
 
 from .serializers import UserSerializer, ShopSerializer, ContactSerializer, ProductSerializer, CategorySerializers, \
     ShopSerializersFORFilters, OrderSerializer
@@ -94,29 +95,57 @@ class ShopDestroy(APIView):
 ############################### Работа с заказами###################
 
 class OrderItemCreate(ListCreateAPIView):
-    """  """
-    # queryset = Order.objects.all()
-    # serializer_class = OrderSerializer
+
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-
+        """ Просмотр корзины пользователя """
         user_id = get_username(request)
+        user = User.objects.get(id=user_id)
+        contact = Contact.objects.get(user_id=user_id)
 
-        order = Order.objects.get(user_id=user_id)
-        serializer = OrderSerializer(order)
-        return Response(serializer.data)
+        order_dict = {}
+        total_cost = 0
+
+        orders = Order.objects.filter(user_id=user_id, state='basket')
+        for order in orders:
+            orderitem = OrderItem.objects.get(order_id=order.id)
+            products = ProductInfo.objects.filter(id=orderitem.product_info_id)
+            for product in products:
+                order_dict[order.id] = f'external_id:{product.external_id}, model:{product.model}, price:{product.price_rrc}, quantity:{orderitem.quantity}, total_price: {product.price_rrc*orderitem.quantity} rubles.'
+                total_cost += product.price_rrc*orderitem.quantity
+
+        order_dict['total_cost']=f'{total_cost} rubles.'
+
+        return JsonResponse({'user': user.username, 'phone': contact.phone, 'orders':order_dict})
+
 
     def post(self, request, *args, **kwargs):
+        """ Добавление заказа в корзину """
 
         user_id = get_username(request)
+        contact = Contact.objects.get(user_id=user_id)
 
         serializer = OrderSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        if serializer.is_valid():
+            order = Order.objects.create(state='basket', contact_id=contact.id, user_id=user_id)
+            product_info = ProductInfo.objects.get(external_id=serializer.data['external_id'])
+            OrderItem.objects.create(quantity=serializer.data['quantity'], order_id=order.id, product_info_id=product_info.id)
+            return Response({'Answer': 'You order is added, go to basket'})
+
+                        # shop = Shop.objects.get(name=serializer.data['shop'])
+            # categories = Category.objects.filter(shops=shop.id)
+            # for category in categories:
+            #     products = Product.objects.filter(category_id=category.id)
+            #     for product in products:
+            #         product_infos = ProductInfo.objects.get(id=product.id, external_id=serializer.data['external_id'])
+            #         print(product_infos.model)
+                    # for product_info in product_infos:
+                    #     print(product_info.id)
+                    #     OrderItem.objects.create(quantity = serializer.data['quantity'], order_id=order.id, product_info_id=product_info.id)
+
+        return JsonResponse({'Error': serializer.errors})
 
 
 ###################### Классы для работы с товаром. Получение товара и фильтрация##################

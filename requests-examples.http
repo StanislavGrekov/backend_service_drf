@@ -131,7 +131,7 @@ Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 # Запрос№. Фильтрация по модели (вхождение текста)
 GET {{baseUrl}}product/list/?search=xs-max
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 
 ###
 # Запрос№. Фильтрация по стоимости (вхождение текста)
@@ -158,23 +158,23 @@ Content-Type: application/json
 Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 
 
-############### Создание заказа ##############
+############### Работа с заказами ##############
 ###
-# Запрос№. 
-GET {{baseUrl}}order/list/
+# Запрос№. Просмотр корзины
+GET {{baseUrl}}basket/list/
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 
 
 ###
 # Запрос№6 Создание заказа
-POST {{baseUrl}}order/create/
+POST {{baseUrl}}basket/add/
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 
-{ "contact":"1",
-  "state": "basket",
-  "user":"1"
+{ "shop":"Связной",
+  "external_id":"4672456",
+  "quantity": "2.2"
 }
 
 

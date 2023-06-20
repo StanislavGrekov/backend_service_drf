@@ -118,15 +118,6 @@ class ShopSerializer(serializers.ModelSerializer):
 
 
 
-class OrderSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Order
-        fields = ['user', 'state', 'contact']
-
-    # user = UserSerializer(read_only=True)
-    # contact = ContactSerializer(read_only=True)
-
 
 class ParametrsSerializerFORProduct(serializers.ModelSerializer):
     """Сериализатор для отображения информации по техническим характеристикам товара (Используется для фильтрации по продуктам)"""
@@ -139,7 +130,7 @@ class ProductSerializer(serializers.ModelSerializer):
     """Сериализатор для отображения информации по продуктам"""
     class Meta:
         model = ProductInfo
-        fields = ['model', 'quantity', 'price_rrc', 'product_parameters',]
+        fields = ['model', 'external_id', 'quantity', 'price_rrc', 'product_parameters', ]
 
     product_parameters = ParametrsSerializerFORProduct(many=True)
 
@@ -148,9 +139,9 @@ class ParametrsSerializerFORCategory(serializers.ModelSerializer):
     """Сериализатор для отображения информации по продуктам (Используется для фильтрации по категориям)"""
     class Meta:
         model = ProductParameter
-        fields = ['name','product_infos',]
+        fields = ['name','ordered_items',]
 
-    product_infos = ProductSerializer(many=True)
+    ordered_items = ProductSerializer(many=True)
 
 
 class CategorySerializers(serializers.ModelSerializer):
@@ -163,10 +154,18 @@ class CategorySerializers(serializers.ModelSerializer):
 
 
 class ShopSerializersFORFilters(serializers.ModelSerializer):
-    """Сериализатор для отображения информации по магазинам """
+    """Сериализатор для отображения информации по магазинам"""
     class Meta:
         model = Shop
         fields = ['name', 'product_infos']
 
     product_infos = ProductSerializer(many=True)
+
+
+class OrderSerializer(serializers.Serializer):
+    """Сериализатор для создания заказа"""
+    shop = serializers.CharField(max_length=50)
+    external_id = serializers.IntegerField()
+    quantity = serializers.IntegerField()
+
 
