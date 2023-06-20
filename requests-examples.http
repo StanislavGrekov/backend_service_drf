@@ -2,49 +2,20 @@
 
 @baseUrl = http://localhost:8000/api/
 
-# Запрос№1. получение объявлений
-GET {{baseUrl}}index/
-Content-Type: application/json
-
+####################### Работа с пользователем #################
 ###
-
-# Запрос#2. получение объявлений
-GET {{baseUrl}}index/
-Content-Type: application/json
-Authorization: Token c5bb83ffc26b3656a5398d34e61cf66dbac7fc5e
-
-###
-# Запрос№3. на получение токена
-POST {{baseUrl}}user/registration/
-Content-Type: application/json
-
-{
-  "username": "Ivanovich",
-  "password": "123"
-}
-
-
-
-###
-
-# Запрос№1. на получение списка пользователей
-GET {{baseUrl}}user/list/
-Content-Type: application/json
-
-###
-
 # Запрос№2. на получение информации о пользователе
 GET {{baseUrl}}user/detail/1/
 Content-Type: application/json
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 ###
-
 # Запрос№3. на создание пользователя
 POST {{baseUrl}}user/create/
 Content-Type: application/json
 
 {
-  "username": "Stason",
+  "username": "Stas",
   "first_name": "Станислав",
   "last_name": "Греков",
   "email": "stas.ik1987@yandex.ru",
@@ -52,11 +23,10 @@ Content-Type: application/json
 }
 
 ###
-
 # Запрос№4. на изменение пользователя
 PATCH {{baseUrl}}user/update/1/
 Content-Type: application/json
-Authorization: Token 2fb84090b2e8acbdf874f092738408a28af16427
+Authorization: Token b7d800d27c260dfb49523252ba910fa116d08f80
 
 {
   "password": "123"
@@ -69,12 +39,13 @@ DELETE {{baseUrl}}user/delete/1/
 Content-Type: application/json
 Authorization: Token a97708e55f33125be3c8b0ae9046e2f67367ef03
 
-###
 
+####################### Работа с контактом #################
+###
 # Запрос№6 Создание контакта
 POST {{baseUrl}}contact/create/
 Content-Type: application/json
-Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 {
   "city": "Миасс",
@@ -89,34 +60,48 @@ Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 ###
 
 # Запрос№. На изменение контакта
-PATCH {{baseUrl}}contact/update/3/
+PATCH {{baseUrl}}contact/update/1/
 Content-Type: application/json
-Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 {
   "city": "Кайгородово"
 }
 
 
-
 ################# Запросы на создание и удаление магазина #################
-
-# Запрос№6. Запрос на создание магазина и загрузку товара из прайса
+###
+# Запрос№6. Запрос на создание магазина и загрузку товара из прайса по указанному URL
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 {
   "name": "Связной",
-  "url": "https://raw.githubusercontent.com/StanislavGrekov/my_diplom_drf/master/shop1.yaml",
-  "state": "True"
+  "url": "https://raw.githubusercontent.com/StanislavGrekov/my_diplom_drf/master/shop1.yaml"
 }
 
 ###
-# Запрос№7. Запрос на удаление магазина и товаров
-DELETE {{baseUrl}}shop/delete/3/
+# Запрос№. Запрос на получение списка магазинов
+GET {{baseUrl}}shop/all/
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+
+###
+# Запрос№. На деактивацию магазина
+PATCH {{baseUrl}}shop/update/3/
+Content-Type: application/json
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+
+{
+  "state": "False"
+}
+
+###
+# Запрос№7. Запрос на удаление магазина и товаров из прайса
+DELETE {{baseUrl}}shop/delete/2/
+Content-Type: application/json
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 ###
 
 
@@ -125,7 +110,7 @@ Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
 # Запрос№. на получение списка товаров (все товары)
 GET {{baseUrl}}product/list/
 Content-Type: application/json
-Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 ###
 # Запрос№. Фильтрация по модели (вхождение текста)
@@ -155,7 +140,7 @@ Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
 # Запрос№. Фильтрация по магазинам (вхождение текста)
 GET {{baseUrl}}shop/list/?search=Связной
 Content-Type: application/json
-Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 
 ############### Работа с заказами ##############
@@ -163,19 +148,25 @@ Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
 # Запрос№. Просмотр корзины
 GET {{baseUrl}}basket/list/
 Content-Type: application/json
-Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 
 ###
 # Запрос№6 Создание заказа
 POST {{baseUrl}}basket/add/
 Content-Type: application/json
-Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 { "shop":"Связной",
-  "external_id":"4672456",
-  "quantity": "2.2"
+  "external_id":"4216292",
+  "quantity": "3"
 }
+
+###
+# Запрос№6 Удаление заказа
+DELETE {{baseUrl}}basket/delete/15/
+Content-Type: application/json
+Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 
 

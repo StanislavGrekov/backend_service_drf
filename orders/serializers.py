@@ -75,17 +75,25 @@ class ContactSerializer(serializers.ModelSerializer):
 
         return contact
 
+class ShopSerializerForDisplayUser(serializers.ModelSerializer):
+    """Сериализатор для отображения данных пользователя при просмотре списка магазинов"""
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name',]
 
 class ShopSerializer(serializers.ModelSerializer):
     """Класс создает магазин, категории товаров и делает связь между ними"""
 
     class Meta:
         model = Shop
-        fields = ['name', 'url', 'user', 'state']
+        fields = ['id', 'name', 'url', 'state', 'user', ]
+
+    user = ShopSerializerForDisplayUser(read_only=True)
 
     def create(self, validated_data):
         name = validated_data.get('name')
-        url = validated_data.get('url') # Адрес прайса
+        url = validated_data.get('url')
         state = True # Указываем, что магазин активен
 
         request = self.context['request']

@@ -1,16 +1,12 @@
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.parsers import JSONParser
-from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth.models import User
-from orders.filters import ProductFilter
-from rest_framework import serializers, status
-from ujson import loads as load_json
+# from orders.filters import ProductFilter
+
 from orders.serializers import get_username
 from pprint import pprint
 
@@ -21,12 +17,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 ########################### Работа с пользователем##################
-
-class UserList(ListAPIView):
-    "Получение списка пользователей"
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
 
 class UserCreate(ListCreateAPIView):
     """Создание пользователя"""
@@ -44,6 +34,7 @@ class UserDetail(RetrieveAPIView):
     """Информация о пользователе"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
 
 class UserDestroy(DestroyAPIView):
     """Удаление пользователя"""
@@ -74,6 +65,11 @@ class ShopCreate(ListCreateAPIView):
     serializer_class = ShopSerializer
     permission_classes = (IsAuthenticated,)
 
+class ShopUpdate(UpdateAPIView):
+    """Создание магазина, заполнение таблиц из прайса"""
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializer
+    permission_classes = (IsAuthenticated,)
 
 class ShopDestroy(APIView):
     """Удаление магазина и всех товаров"""
@@ -88,13 +84,13 @@ class ShopDestroy(APIView):
                 Product.objects.filter(category_id=cat.id).delete()
             categories.delete()
             shop.delete()
-            return Response({'Ответ': "Магазин и все сопутствующие товары удалены!"})
+            return Response({'Answer': "The store has been deleted!"})
         except ObjectDoesNotExist:
-            return Response({"Ответ": "Магазин не найден!"})
+            return Response({"Answer": "The store not found!"})
 
 ############################### Работа с заказами###################
 
-class OrderItemCreate(ListCreateAPIView):
+class OrderItemCreate(APIView):
 
     permission_classes = (IsAuthenticated,)
 
@@ -129,24 +125,30 @@ class OrderItemCreate(ListCreateAPIView):
         serializer = OrderSerializer(data=request.data)
 
         if serializer.is_valid():
-            order = Order.objects.create(state='basket', contact_id=contact.id, user_id=user_id)
             product_info = ProductInfo.objects.get(external_id=serializer.data['external_id'])
-            OrderItem.objects.create(quantity=serializer.data['quantity'], order_id=order.id, product_info_id=product_info.id)
-            return Response({'Answer': 'You order is added, go to basket'})
-
-                        # shop = Shop.objects.get(name=serializer.data['shop'])
-            # categories = Category.objects.filter(shops=shop.id)
-            # for category in categories:
-            #     products = Product.objects.filter(category_id=category.id)
-            #     for product in products:
-            #         product_infos = ProductInfo.objects.get(id=product.id, external_id=serializer.data['external_id'])
-            #         print(product_infos.model)
-                    # for product_info in product_infos:
-                    #     print(product_info.id)
-                    #     OrderItem.objects.create(quantity = serializer.data['quantity'], order_id=order.id, product_info_id=product_info.id)
-
+            shop = Shop.objects.get(id=product_info.shop_id)
+            if shop.name != serializer.data['shop']:
+                return JsonResponse({'Error': 'The store not found!'})
+            else:
+                if shop.state == True: # Проверка активен ли магазин
+                    order = Order.objects.create(state='basket', contact_id=contact.id, user_id=user_id)
+                    OrderItem.objects.create(quantity=serializer.data['quantity'], order_id=order.id, product_info_id=product_info.id)
+                    return Response({'Answer': 'You order is added, go to basket'})
+                else:
+                    return JsonResponse({'Error': 'The store is deactivated!'})
         return JsonResponse({'Error': serializer.errors})
 
+    def delete(self, request, pk, format=None):
+
+        user_id = get_username(request)
+
+        try:
+            order = Order.objects.get(id=pk, user_id=user_id, state='basket')
+            OrderItem.objects.get(order_id=order.id).delete()
+            order.delete()
+            return JsonResponse({'Answer': 'Order deleted!'})
+        except ObjectDoesNotExist:
+            return JsonResponse({"Error": "The order not found, or you not Owner!"})
 
 ###################### Классы для работы с товаром. Получение товара и фильтрация##################
 
@@ -167,7 +169,7 @@ class ListProductDateView(ListAPIView):
     serializer_class = ProductSerializer
 
     permission_classes = (IsAuthenticated,)
-    filterset_class = ProductFilter
+    # filterset_class = ProductFilter
 
 class ListCategoryView(ListAPIView):
     """Фильтрация по категориям"""
