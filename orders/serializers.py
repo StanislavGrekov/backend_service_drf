@@ -7,17 +7,12 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.http import JsonResponse
-from orders.signal import create_send_mail, update_send_mail
+from orders.signal import create_user_send_mail, update_user_send_mail
 import yaml
 from yaml.loader import Loader
 import requests
+from orders.permissions import get_username
 
-
-def get_username(request):
-    """Получение id пользователя"""
-    if request.user.is_authenticated:
-        user_id = request.user.id
-        return user_id
 
 class ShopUserSerializer(serializers.ModelSerializer):
     """Сериализатор, для отображения пользователя"""
@@ -30,30 +25,32 @@ class UserSerializer(serializers.ModelSerializer):
     """Класс создает, обновляет пользователя и отправляет письма о успешно создании, обновлении"""
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email',]
+
 
     def create(self, validated_data):
         user = super().create(validated_data)
         token = Token.objects.create(user=user)
 
-        create_send_mail(user.email, user.first_name, user.last_name, token)
+        create_user_send_mail(user.email, user.first_name, user.last_name, token) # Отправляем письмо о создании пользователя
 
         return user
 
     def update(self, instance, validated_data):
+
         user = super().update(instance, validated_data)
 
         token_old = Token.objects.get(user=user)
         token_old.delete()
 
         token_new = Token.objects.create(user=user)
-        update_send_mail(user.email, user.first_name, user.last_name, token_new)
+        update_user_send_mail(user.email, user.first_name, user.last_name, token_new) # Отправляем письмо о изменении пользователя
 
         return user
 
 
 class ContactSerializer(serializers.ModelSerializer):
-
+    """Класс создае контакт"""
     class Meta:
         model = Contact
         fields = ['id', 'city', 'street', 'house', 'structure', 'building', 'apartment',  'phone', 'user']
@@ -83,7 +80,7 @@ class ShopSerializerForDisplayUser(serializers.ModelSerializer):
         fields = ['first_name', 'last_name',]
 
 class ShopSerializer(serializers.ModelSerializer):
-    """Класс создает магазин, категории товаров и делает связь между ними"""
+    """Класс создает магазин, категории товаров и делает связь между ними, производит наполнение из прайса"""
 
     class Meta:
         model = Shop
@@ -100,7 +97,7 @@ class ShopSerializer(serializers.ModelSerializer):
         user_id = get_username(request)
 
         stream = requests.get(url).content
-        price_list = yaml.load(stream, Loader=Loader)
+        price_list = yaml.load(stream, Loader=Loader) # Загрузка прайса
 
         shop = Shop.objects.create(name=name, url=url, user_id=user_id, state=state)
 
@@ -147,9 +144,9 @@ class ParametrsSerializerFORCategory(serializers.ModelSerializer):
     """Сериализатор для отображения информации по продуктам (Используется для фильтрации по категориям)"""
     class Meta:
         model = ProductParameter
-        fields = ['name','ordered_items',]
+        fields = ['name','product_infos']
 
-    ordered_items = ProductSerializer(many=True)
+    product_infos = ProductSerializer(many=True)
 
 
 class CategorySerializers(serializers.ModelSerializer):
@@ -177,3 +174,6 @@ class OrderSerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
 
 
+class OrderProcessingSerializer(serializers.Serializer):
+    """Сериализатор для обработки заказа"""
+    state = serializers.CharField(max_length=50)

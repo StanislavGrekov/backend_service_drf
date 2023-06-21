@@ -19,8 +19,8 @@ from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
 from orders.views import UserCreate, UserDetail, UserUpdate, UserDestroy, ShopCreate, ShopUpdate, \
-    ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView, ListShopView, OrderItemCreate
-    # hello_world
+    ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView, ListShopView, OrderItemCreate, OrderProcessing
+
 
 
 
@@ -53,4 +53,8 @@ urlpatterns = [
     path('api/basket/list/', OrderItemCreate.as_view()), # Просмотр корзины
     path('api/basket/add/', OrderItemCreate.as_view()),
     path('api/basket/delete/<int:pk>/', OrderItemCreate.as_view()),
+
+    # Пути для обработки заказа
+    path('api/order/processing/', OrderProcessing.as_view()),  # Передача заказа в обработку
+    path('api/order/list/', OrderProcessing.as_view()), # Просмотр состояния заказа
 ]

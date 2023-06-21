@@ -4,13 +4,13 @@
 
 ####################### Работа с пользователем #################
 ###
-# Запрос№2. на получение информации о пользователе
+# Запрос№1. Получение информации о пользователе
 GET {{baseUrl}}user/detail/1/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token b80d81818bf179f00227aeb05e6c646921e45852
 
 ###
-# Запрос№3. на создание пользователя
+# Запрос№2. Создание пользователя
 POST {{baseUrl}}user/create/
 Content-Type: application/json
 
@@ -23,29 +23,28 @@ Content-Type: application/json
 }
 
 ###
-# Запрос№4. на изменение пользователя
+# Запрос№3. Изменение пользователя
 PATCH {{baseUrl}}user/update/1/
 Content-Type: application/json
-Authorization: Token b7d800d27c260dfb49523252ba910fa116d08f80
+Authorization: Token cc50e3703896d50344d875d3cdab0abd163f2c50
 
 {
   "password": "123"
 }
 
 ###
-
-# Запрос№5. на удаление пользователя
-DELETE {{baseUrl}}user/delete/1/
+# Запрос№4. Удаление пользователя
+DELETE {{baseUrl}}user/delete/3/
 Content-Type: application/json
-Authorization: Token a97708e55f33125be3c8b0ae9046e2f67367ef03
+Authorization: Token 6c7803a70453934a4efb501b496e3ec207f39bea
 
 
 ####################### Работа с контактом #################
 ###
-# Запрос№6 Создание контакта
+# Запрос№5. Создание контакта
 POST {{baseUrl}}contact/create/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 {
   "city": "Миасс",
@@ -59,10 +58,10 @@ Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 ###
 
-# Запрос№. На изменение контакта
+# Запрос№6. Изменение контакта
 PATCH {{baseUrl}}contact/update/1/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 {
   "city": "Кайгородово"
@@ -71,10 +70,10 @@ Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 ################# Запросы на создание и удаление магазина #################
 ###
-# Запрос№6. Запрос на создание магазина и загрузку товара из прайса по указанному URL
+# Запрос№7. Запрос на создание магазина и загрузку товара из прайса по указанному URL
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 {
   "name": "Связной",
@@ -82,23 +81,23 @@ Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 }
 
 ###
-# Запрос№. Запрос на получение списка магазинов
+# Запрос№8. Запрос на получение списка магазинов
 GET {{baseUrl}}shop/all/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 ###
-# Запрос№. На деактивацию магазина
-PATCH {{baseUrl}}shop/update/3/
+# Запрос№9. На деактивацию магазина
+PATCH {{baseUrl}}shop/update/1/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 {
-  "state": "False"
+  "state": "True"
 }
 
 ###
-# Запрос№7. Запрос на удаление магазина и товаров из прайса
+# Запрос№10. Запрос на удаление магазина и товаров из прайса
 DELETE {{baseUrl}}shop/delete/2/
 Content-Type: application/json
 Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
@@ -107,67 +106,85 @@ Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 
 ############### Запросы на получение товара ##############
 
-# Запрос№. на получение списка товаров (все товары)
+# Запрос№11-1. Получение списка товаров (все товары)
 GET {{baseUrl}}product/list/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 ###
-# Запрос№. Фильтрация по модели (вхождение текста)
+# Запрос№11-2. Фильтрация по модели (вхождение текста)
 GET {{baseUrl}}product/list/?search=xs-max
 Content-Type: application/json
-Authorization: Token 59876bf383edd0a8671100644100eaea5c39909f
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 ###
-# Запрос№. Фильтрация по стоимости (вхождение текста)
+# Запрос№11-3. Фильтрация по стоимости (вхождение текста)
 GET {{baseUrl}}product/list/?search=1300
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 ###
-# Запрос№. Фильтрация по дате
+# Запрос№11-4. Фильтрация по дате
 GET {{baseUrl}}product/list/date/?time_create_after=2023-06-15&&time_create_before=2023-06-16
 Content-Type: application/json
-Authorization: Token 5d71e977a8e865247756bfa91f6790f2627dee66
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 ###
-# Запрос№. Фильтрация по категориям (вхождение текста)
+# Запрос№11-5. Фильтрация по категориям (вхождение текста)
 GET {{baseUrl}}category/list/?search=Аксессуары
 Content-Type: application/json
-Authorization: Token 61f7bf616051bcedb460c0e0805ae1d438245159
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 ###
-# Запрос№. Фильтрация по магазинам (вхождение текста)
+# Запрос№11-6. Фильтрация по магазинам (вхождение текста)
 GET {{baseUrl}}shop/list/?search=Связной
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 
 ############### Работа с заказами ##############
 ###
-# Запрос№. Просмотр корзины
+# Запрос№12. Просмотр корзины
 GET {{baseUrl}}basket/list/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
-
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 ###
-# Запрос№6 Создание заказа
+# Запрос№13 Создание заказа
 POST {{baseUrl}}basket/add/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
 { "shop":"Связной",
-  "external_id":"4216292",
-  "quantity": "3"
+  "external_id":"4216156",
+  "quantity": "2"
 }
 
 ###
-# Запрос№6 Удаление заказа
-DELETE {{baseUrl}}basket/delete/15/
+# Запрос№14 Удаление заказа
+DELETE {{baseUrl}}basket/delete/6/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+###
 
+############### Обработка заказа ##############
 
+# Запрос№15 Подтверждение заказа
+POST {{baseUrl}}order/processing/
+Content-Type: application/json
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 
+{ 
+  "state":"Delivered"
+}
 
+###
+# Запрос№12. Просмотр статуса заказа
+GET {{baseUrl}}order/list/
+Content-Type: application/json
+Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+
+###
+python manage.py createsuperuser --email stas.ik1987@yandex.ru
+python manage.py drf_create_token 
+bc768ff146c0de895d925fc1ffb153578badff43
