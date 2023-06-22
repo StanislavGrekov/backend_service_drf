@@ -2,13 +2,13 @@ from django.http import JsonResponse
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth.models import User
 from orders.filters import ProductFilter
 
-from orders.permissions import get_username, IsAdmin, IsOwner
-from orders.signal import order_user_create_send_mail
+from orders.permissions import get_username, IsOwner
+from orders.signal import order_user_create_send_mail, order_seller_confirm_send_mail, order_buyer_confirm_send_mail
 
 from .serializers import UserSerializer, ShopSerializer, ContactSerializer, ProductSerializer, CategorySerializers, \
     ShopSerializersFORFilters, OrderSerializer, OrderProcessingSerializer
@@ -69,12 +69,12 @@ class ShopUpdate(UpdateAPIView):
     """Создание обновление магазина"""
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwner)
 
 class ShopDestroy(APIView):
     """Удаление магазина и всех товаров"""
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,  IsOwner)
 
     def delete(self, request, pk=None):
         try:
@@ -125,17 +125,20 @@ class OrderItemCreate(APIView):
         serializer = OrderSerializer(data=request.data)
 
         if serializer.is_valid():
-            product_info = ProductInfo.objects.get(external_id=serializer.data['external_id'])
-            shop = Shop.objects.get(id=product_info.shop_id)
-            if shop.name != serializer.data['shop']:
-                return JsonResponse({'Error': 'The store not found!'})
-            else:
-                if shop.state == True: # Проверка активен ли магазин
-                    order = Order.objects.create(state='basket', contact_id=contact.id, user_id=user_id)
-                    OrderItem.objects.create(quantity=serializer.data['quantity'], order_id=order.id, product_info_id=product_info.id)
-                    return Response({'Answer': 'You order is added, go to basket'})
+            try:
+                product_info = ProductInfo.objects.get(external_id=serializer.data['external_id'])
+                shop = Shop.objects.get(id=product_info.shop_id)
+                if shop.name != serializer.data['shop']:
+                    return JsonResponse({'Error': 'The store not found!'})
                 else:
-                    return JsonResponse({'Error': 'The store is deactivated!'})
+                    if shop.state == True: # Проверка активен ли магазин
+                        order = Order.objects.create(state='basket', contact_id=contact.id, user_id=user_id)
+                        OrderItem.objects.create(quantity=serializer.data['quantity'], order_id=order.id, product_info_id=product_info.id)
+                        return Response({'Answer': 'You order is added, go to basket'})
+                    else:
+                        return JsonResponse({'Error': 'The store is deactivated!'})
+            except ObjectDoesNotExist:
+                return JsonResponse({"Error": "The product not found!"})
         return JsonResponse({'Error': serializer.errors})
 
 
@@ -155,29 +158,28 @@ class OrderItemCreate(APIView):
 ############################### Работа со статусом заказа ###################
 
 class OrderProcessing(APIView):
-    """ """
+    """ Пользователь работает с заказом """
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        """ Просмотр заказа пользователя """
+        """ Просмотр заказов Пользователем"""
         user_id = get_username(request)
         user = User.objects.get(id=user_id)
-        contact = Contact.objects.get(user_id=user_id)
 
         order_dict = {}
 
-        orders = Order.objects.filter(user_id=user_id, state='Confirmed')
+        orders = Order.objects.filter(user_id=user_id) & Order.objects.exclude(state='basket')
         for order in orders:
             orderitem = OrderItem.objects.get(order_id=order.id)
             products = ProductInfo.objects.filter(id=orderitem.product_info_id)
             for product in products:
                 order_dict[order.id] = f'Status:{order.state}, model:{product.model},  quantity:{orderitem.quantity}.'
 
-        return Response({'first_name': user.first_name, 'last_name': user.last_name, 'phone': contact.phone, 'orders':order_dict})
+        return Response({'first_name': user.first_name, 'last_name': user.last_name, 'orders':order_dict})
 
 
     def post(self, request, *args, **kwargs):
-        """ Запуск заказа в обработку """
+        """ Запуск заказа в обработку пользователем"""
 
         user_id = get_username(request)
         user = User.objects.get(id=user_id)
@@ -186,68 +188,112 @@ class OrderProcessing(APIView):
 
         if serializer.is_valid():
 
-            if user.is_staff == False:
-                if serializer.data['state'] == 'Confirmed':
-                    try:
-                        orders_count = Order.objects.filter(user_id=user_id, state='basket').count()
-                        if orders_count == 0:
-                            return JsonResponse({'Error': 'No orders!'})
-                        orders = Order.objects.filter(user_id=user_id, state='basket')
-                        for order in orders:
-                            order_items = OrderItem.objects.filter(order_id=order.id)
-                            for order_item in order_items:
-                                product_info = ProductInfo.objects.get(id=order_item.product_info_id)
-                                value = product_info.quantity - order_item.quantity
-                                ProductInfo.objects.filter(id=order_item.product_info_id).update(quantity=value)
+            if serializer.data['state'] == 'Confirmed':
+                try:
+                    orders_count = Order.objects.filter(user_id=user_id, state='basket').count()
+                    if orders_count == 0:
+                       return JsonResponse({'Error': 'No orders!'})
+                    orders = Order.objects.filter(user_id=user_id, state='basket')
+                    orders_list = []
+                    for order in orders:
+                        orders_list.append(order.id)
+                        order_items = OrderItem.objects.filter(order_id=order.id)
+                        for order_item in order_items:
+                            product_info = ProductInfo.objects.get(id=order_item.product_info_id)
+                            value = product_info.quantity - order_item.quantity
+                            ProductInfo.objects.filter(id=order_item.product_info_id).update(quantity=value)
+                    Order.objects.filter(user_id=user.id, state='basket').update(state='Confirmed')
 
-                        Order.objects.filter(user_id=user.id).update(state=serializer.data['state'])
+                    superuser=User.objects.get(is_staff=True)
+                    orders_list = " ".join(map(str, orders_list))
 
-                        superuser=User.objects.get(is_staff=True)
+                    # Послыаем письмо администратору для проверки
+                    order_user_create_send_mail(superuser.email, superuser.username, user, orders_list)
 
-                        order_user_create_send_mail(superuser.email, superuser.username, user) # Послыаем письмо администратору для проверки
+                    return JsonResponse({'Answer': 'The order has been sent to work!'})
+                except:
+                    return JsonResponse({'Error': 'Not enough products in stock!'})
 
-                        return JsonResponse({'Answer': 'The order has been sent to work!'})
-                    except:
-                        return JsonResponse({'Error': 'Not enough products in stock!'})
-
-                elif serializer.data['state'] == 'Delivered':
-                    Order.objects.filter(user_id=user.id, state='Sent').update(state=serializer.data['state'])
-                    return JsonResponse({'Answer': 'Thank you for using the our service!'})
-
-                else:
-                    return JsonResponse({'Error': 'You can not use this state!'})
+            elif serializer.data['state'] == 'Delivered':
+                Order.objects.filter(user_id=user.id, state='Delivery').update(state='Delivered')
+                return JsonResponse({'Answer': 'Thank you for using the our service!'})
 
             else:
-                if serializer.data['state'] == 'Sent':
-                    Order.objects.filter(user_id=user.id, state='Sent').update(state=serializer.data['state'])
-                    return JsonResponse({'Answer': 'Thank you for using the our service!'})
+                return JsonResponse({'Error': 'You can not use this state!'})
 
-        # if serializer.is_valid():
-        #     product_info = ProductInfo.objects.get(external_id=serializer.data['external_id'])
-        #     shop = Shop.objects.get(id=product_info.shop_id)
-        #     if shop.name != serializer.data['shop']:
-        #         return JsonResponse({'Error': 'The store not found!'})
-        #     else:
-        #         if shop.state == True: # Проверка активен ли магазин
-        #             order = Order.objects.create(state='basket', contact_id=contact.id, user_id=user_id)
-        #             OrderItem.objects.create(quantity=serializer.data['quantity'], order_id=order.id, product_info_id=product_info.id)
-        #             return Response({'Answer': 'You order is added, go to basket'})
-        #         else:
-        #             return JsonResponse({'Error': 'The store is deactivated!'})
         return JsonResponse({'Error': serializer.errors})
 
+class OrderAdminProcessing(APIView):
+    """ Администратор работает с заказом """
 
-    def delete(self, request, pk, format=None):
-        """ Удаление заказа из корзины"""
-        user_id = get_username(request)
+    permission_classes = (IsAdminUser,)
+
+    def get(self, request, pk):
+        """ Просмотр заказа администратором"""
 
         try:
-            order = Order.objects.get(id=pk, user_id=user_id, state='basket')
-            OrderItem.objects.get(order_id=order.id).delete()
-            order.delete()
-            return JsonResponse({'Answer': 'Order deleted!'})
+            order_dict = {}
+            contact_buyer_dict={}
+
+            #Берем информацию по покупателю
+            order = Order.objects.get(id=pk)
+            user_buyer = User.objects.get(id=order.user_id)
+            contact = Contact.objects.get(id=order.contact_id)
+            orderitem = OrderItem.objects.get(order_id=order.id)
+            product = ProductInfo.objects.get(id=orderitem.product_info_id)
+
+            order_dict[order.id] = f'Status: {order.state}, date_create: {order.dt}, model: {product.model},  quantity: {orderitem.quantity}.'
+            contact_buyer_dict['-'] = f'Город: {contact.city}, Улица: {contact.street}, Дом: {contact.house}, Корпус: {contact.structure}, ' \
+                                             f'Строение: {contact.building}, Квартира: {contact.apartment}, Телефон: {contact.phone}.'
+
+            # Берем информацию по поставщику
+            product = ProductInfo.objects.get(external_id=product.external_id)
+            shop = Shop.objects.get(id=product.shop_id)
+            user_seller = User.objects.get(id=shop.user_id)
+
+            return Response({'Покупатель': {'Фамилия':  user_buyer.last_name, 'Имя':  user_buyer.first_name, 'Адрес доставки': contact_buyer_dict, 'Заказ': order_dict},
+                             'Продавец': {'Фамилия':  user_seller.last_name, 'Имя':  user_seller.first_name, 'Магазин': shop.name}})
+
         except ObjectDoesNotExist:
-            return JsonResponse({"Error": "The order not found, or you not Owner!"})
+            return JsonResponse({"Error": "The order not found!"})
+
+
+    def post(self, request, *args, **kwargs):
+        """ Запуск заказа в доставку администратором"""
+
+        serializer = OrderProcessingSerializer(data=request.data)
+
+        if serializer.is_valid():
+            try:
+                # Берем информацию по покупателю
+                order = Order.objects.get(id=serializer.data['order'])
+                user_buyer = User.objects.get(id=order.user_id)
+                contact = Contact.objects.get(id=order.contact_id)
+                orderitem = OrderItem.objects.get(order_id=order.id)
+                product = ProductInfo.objects.get(id=orderitem.product_info_id)
+
+                order_ = f'{order.id}, Статус: {order.state}, Дата создания заказа: {order.dt}, Модель: {product.model},  Количество: {orderitem.quantity}.'
+                contact_buyer_= f'Город: {contact.city}, Улица: {contact.street}, Дом: {contact.house}, Корпус: {contact.structure}, ' \
+                           f'Строение: {contact.building}, Квартира: {contact.apartment}, Телефон: {contact.phone}.'
+
+                # Берем информацию по поставщику
+                product = ProductInfo.objects.get(external_id=product.external_id)
+                shop = Shop.objects.get(id=product.shop_id)
+                user_seller = User.objects.get(id=shop.user_id)
+
+                # Шлем письма
+                order_seller_confirm_send_mail(user_seller.email, user_seller.first_name, user_seller.last_name, order_, contact_buyer_)
+                order_buyer_confirm_send_mail(user_buyer.email, user_buyer.first_name, user_buyer.last_name, order_)
+
+                order.state = 'Delivery'
+                order.save(update_fields=['state'])
+
+                return JsonResponse({'Answer': 'The order has been sent to delivery!'})
+
+            except:
+                return JsonResponse({'Error': 'Order not found!'})
+
+        return JsonResponse({'Error': serializer.errors})
 
 ######################  Классы для работы с фильтром (запросы 11-1 - 11-6)##################
 

@@ -5,9 +5,9 @@
 ####################### Работа с пользователем #################
 ###
 # Запрос№1. Получение информации о пользователе
-GET {{baseUrl}}user/detail/1/
+GET {{baseUrl}}user/detail/4/
 Content-Type: application/json
-Authorization: Token b80d81818bf179f00227aeb05e6c646921e45852
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
 ###
 # Запрос№2. Создание пользователя
@@ -15,11 +15,11 @@ POST {{baseUrl}}user/create/
 Content-Type: application/json
 
 {
-  "username": "Stas",
-  "first_name": "Станислав",
-  "last_name": "Греков",
+  "username": "Semen",
+  "first_name": "Семенов",
+  "last_name": "Семен",
   "email": "stas.ik1987@yandex.ru",
-  "password": "123456"
+  "password": "123456lkldfkdfs"
 }
 
 ###
@@ -44,16 +44,16 @@ Authorization: Token 6c7803a70453934a4efb501b496e3ec207f39bea
 # Запрос№5. Создание контакта
 POST {{baseUrl}}contact/create/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
 {
-  "city": "Миасс",
-  "street": "Седова",
-  "house": "5",
+  "city": "Челябинск",
+  "street": "Благих",
+  "house": "11",
   "structure": "а",
   "building": "1",
   "apartment": "67",
-  "phone": "123456"
+  "phone": "8-951-444-33-22"
 }
 
 ###
@@ -84,16 +84,16 @@ Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 # Запрос№8. Запрос на получение списка магазинов
 GET {{baseUrl}}shop/all/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
 ###
 # Запрос№9. На деактивацию магазина
 PATCH {{baseUrl}}shop/update/1/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
 {
-  "state": "True"
+  "state": "False"
 }
 
 ###
@@ -109,7 +109,7 @@ Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 # Запрос№11-1. Получение списка товаров (все товары)
 GET {{baseUrl}}product/list/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
 ###
 # Запрос№11-2. Фильтрация по модели (вхождение текста)
@@ -147,44 +147,66 @@ Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 # Запрос№12. Просмотр корзины
 GET {{baseUrl}}basket/list/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
 ###
 # Запрос№13 Создание заказа
 POST {{baseUrl}}basket/add/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
 { "shop":"Связной",
-  "external_id":"4216156",
-  "quantity": "2"
+  "external_id":"4216313",
+  "quantity": "1"
 }
 
 ###
 # Запрос№14 Удаление заказа
-DELETE {{baseUrl}}basket/delete/6/
+DELETE {{baseUrl}}basket/delete/12/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 ###
 
 ############### Обработка заказа ##############
 
-# Запрос№15 Подтверждение заказа
+# Запрос№15 Запрос для пользователя. Подразумевается, что пользователь, после того как добавил товары в корзину
+# может подтвердить заказ ("state":"Confirmed"), а после получения заказа установить статуст доставлено ("state":"Delivered")
+# Выполняется сразу для всех заказов.
 POST {{baseUrl}}order/processing/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
 { 
   "state":"Delivered"
 }
 
 ###
-# Запрос№12. Просмотр статуса заказа
+# Запрос№16. Запрос для пользователя. Просмотр статуса заказа
 GET {{baseUrl}}order/list/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
+
 
 ###
+# Запрос№17. Запрос для администратора. Просмотр заказа по номеру
+GET {{baseUrl}}order/admin/list/18/
+Content-Type: application/json
+Authorization: Token b80d81818bf179f00227aeb05e6c646921e45852
+
+###
+# Запрос№18 Запрос для администратора. Подразумевается, что администратор, после того как посмотрел заказ
+#отправляет их в доставку
+POST {{baseUrl}}order/admin/processing/
+Content-Type: application/json
+Authorization: Token b80d81818bf179f00227aeb05e6c646921e45852
+
+{ 
+  "order":"18"
+}
+###
+
+
+
 python manage.py createsuperuser --email stas.ik1987@yandex.ru
 python manage.py drf_create_token 
 bc768ff146c0de895d925fc1ffb153578badff43

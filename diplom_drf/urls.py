@@ -19,7 +19,8 @@ from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
 from orders.views import UserCreate, UserDetail, UserUpdate, UserDestroy, ShopCreate, ShopUpdate, \
-    ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView, ListShopView, OrderItemCreate, OrderProcessing
+    ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView, \
+    ListShopView, OrderItemCreate, OrderProcessing, OrderAdminProcessing
 
 
 
@@ -54,7 +55,12 @@ urlpatterns = [
     path('api/basket/add/', OrderItemCreate.as_view()),
     path('api/basket/delete/<int:pk>/', OrderItemCreate.as_view()),
 
-    # Пути для обработки заказа
-    path('api/order/processing/', OrderProcessing.as_view()),  # Передача заказа в обработку
-    path('api/order/list/', OrderProcessing.as_view()), # Просмотр состояния заказа
+    # Пути для обработки заказа (пользователь)
+    path('api/order/processing/', OrderProcessing.as_view()),  # Передача заказа в обработку пользователем
+    path('api/order/list/', OrderProcessing.as_view()), # Просмотр состояния заказа пользователем
+
+    # Пути для обработки заказа (админ)
+    path('api/order/admin/list/<int:pk>/', OrderAdminProcessing.as_view()),  # Просмотр заказа по номеру заказа
+    path('api/order/admin/processing/', OrderAdminProcessing.as_view()),  # Запуск заказа в доставку
 ]
+

@@ -176,4 +176,5 @@ class OrderSerializer(serializers.Serializer):
 
 class OrderProcessingSerializer(serializers.Serializer):
     """Сериализатор для обработки заказа"""
-    state = serializers.CharField(max_length=50)
+    state = serializers.CharField(max_length=50, required=False)
+    order = serializers.IntegerField(required=False)
