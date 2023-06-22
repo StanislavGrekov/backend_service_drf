@@ -1,12 +1,7 @@
 from rest_framework import serializers
-from rest_framework.decorators import api_view, action
-from rest_framework.serializers import ValidationError
 from django.contrib.auth.models import User
 from orders.models import Shop, Category, Contact, Product, ProductInfo, ProductParameter, OrderItem, Order
-from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
-from django.http import JsonResponse
 from orders.signal import create_user_send_mail, update_user_send_mail
 import yaml
 from yaml.loader import Loader
