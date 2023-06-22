@@ -3,6 +3,7 @@
 ## Инструкция:
 
 1.Скачиваем проект,  затем необходимо создать суперпользователя и сгенерировать ему токен:
+
 python manage.py createsuperuser --email stas.ik1987@yandex.ru
 
 python manage.py drf_create_token Admin
