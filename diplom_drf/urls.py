@@ -18,21 +18,19 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
-from orders.views import UserCreate, UserDetail, UserUpdate, UserDestroy, ShopCreate, ShopUpdate, \
+from orders.views import UserViewSet, UserCreateViewSet, ShopCreate, ShopUpdate, \
     ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView, \
     ListShopView, OrderItemCreate, OrderProcessing, OrderAdminProcessing
 
+from rest_framework.routers import DefaultRouter
 
-
-
+router = DefaultRouter()
+router.register('user', UserViewSet)
+router.register('usercreate', UserCreateViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #Пути для работы с пользователем
-    path('api/user/create/', UserCreate.as_view()),
-    path('api/user/update/<int:pk>/', UserUpdate.as_view()),
-    path('api/user/detail/<int:pk>/', UserDetail.as_view()),
-    path('api/user/delete/<int:pk>/', UserDestroy.as_view()),
+    path('api/', include(router.urls)), # Роут для работы с пользователем
 
     # Пути для работы с контактом
     path('api/contact/create/', ContactCreate.as_view()),

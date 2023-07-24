@@ -4,29 +4,32 @@
 
 ####################### Работа с пользователем #################
 ###
-# Запрос№1. Получение информации о пользователе
-GET {{baseUrl}}user/detail/4/
-Content-Type: application/json
-Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
-###
-# Запрос№2. Создание пользователя
-POST {{baseUrl}}user/create/
+# Запрос№1. Создание пользователя
+POST {{baseUrl}}usercreate/
 Content-Type: application/json
 
 {
-  "username": "Semen",
+  "username": "Sem",
   "first_name": "Семен",
   "last_name": "Семенов",
   "email": "stas.ik1987@yandex.ru",
   "password": "123456lkldfkdfs"
 }
 
+
+###
+
+# Запрос№2. Получение информации о пользователе
+GET {{baseUrl}}user/
+Content-Type: application/json
+Authorization: Token e08f62ab2c68555d0b7892167c237aeeb808cdc2
+
 ###
 # Запрос№3. Изменение пользователя
-PATCH {{baseUrl}}user/update/1/
+PATCH {{baseUrl}}user/3/
 Content-Type: application/json
-Authorization: Token cc50e3703896d50344d875d3cdab0abd163f2c50
+Authorization: Token e08f62ab2c68555d0b7892167c237aeeb808cdc2
 
 {
   "password": "123"
@@ -34,9 +37,9 @@ Authorization: Token cc50e3703896d50344d875d3cdab0abd163f2c50
 
 ###
 # Запрос№4. Удаление пользователя
-DELETE {{baseUrl}}user/delete/3/
+DELETE {{baseUrl}}user/3/
 Content-Type: application/json
-Authorization: Token 6c7803a70453934a4efb501b496e3ec207f39bea
+Authorization: Token 1811c088fe042fdadecabd43b70750e9be0668ef
 
 
 ####################### Работа с контактом #################
@@ -44,7 +47,7 @@ Authorization: Token 6c7803a70453934a4efb501b496e3ec207f39bea
 # Запрос№5. Создание контакта
 POST {{baseUrl}}contact/create/
 Content-Type: application/json
-Authorization: Token 1bff16187689c5f66495b892330aaaf07c0a4514
+Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
 
 {
   "city": "Челябинск",
@@ -73,7 +76,7 @@ Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 # Запрос№7. Запрос на создание магазина и загрузку товара из прайса по указанному URL
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token 7a5e156efb1a0ff1a38e94f0fa935b4982317e70
+Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
 
 {
   "name": "Связной",
@@ -84,7 +87,7 @@ Authorization: Token 7a5e156efb1a0ff1a38e94f0fa935b4982317e70
 # Запрос№8. Запрос на получение списка магазинов
 GET {{baseUrl}}shop/all/
 Content-Type: application/json
-Authorization: Token 7a5e156efb1a0ff1a38e94f0fa935b4982317e70
+Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
 
 ###
 # Запрос№9. На деактивацию магазина
@@ -109,13 +112,13 @@ Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 # Запрос№11-1. Получение списка товаров (все товары)
 GET {{baseUrl}}product/list/
 Content-Type: application/json
-Authorization: Token 1bff16187689c5f66495b892330aaaf07c0a4514
+Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
 
 ###
 # Запрос№11-2. Фильтрация по модели (вхождение текста)
 GET {{baseUrl}}product/list/?search=xs-max
 Content-Type: application/json
-Authorization: Token 1bff16187689c5f66495b892330aaaf07c0a4514
+Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
 
 ###
 # Запрос№11-3. Фильтрация по стоимости (вхождение текста)
@@ -133,7 +136,7 @@ Authorization: Token 1bff16187689c5f66495b892330aaaf07c0a4514
 # Запрос№11-5. Фильтрация по категориям (вхождение текста)
 GET {{baseUrl}}category/list/?search=Аксессуары
 Content-Type: application/json
-Authorization: Token 1bff16187689c5f66495b892330aaaf07c0a4514
+Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
 
 ###
 # Запрос№11-6. Фильтрация по магазинам (вхождение текста)

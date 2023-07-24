@@ -5,3 +5,6 @@ psycopg2-binary
 pyyaml
 ujson
 requests
+django-filter
+pytest-django
+pytest

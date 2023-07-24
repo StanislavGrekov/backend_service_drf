@@ -3,7 +3,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, UpdateAPIView
 from django.contrib.auth.models import User
 from orders.filters import ProductFilter
 
@@ -15,32 +15,27 @@ from .serializers import UserSerializer, ShopSerializer, ContactSerializer, Prod
 from orders.models import Shop, Contact, Category, Product, ProductInfo, OrderItem, Order
 from django.core.exceptions import ObjectDoesNotExist
 
+from rest_framework import viewsets, mixins
+
 
 ########################### Работа с пользователем##################
 
-class UserCreate(ListCreateAPIView):
+class UserCreateViewSet(mixins.CreateModelMixin,
+                   viewsets.GenericViewSet):
     """Создание пользователя"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-
-class UserUpdate(UpdateAPIView):
-    """Обновление пользователя"""
+class UserViewSet(mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
+    """Работа с пользователем"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsOwner)
 
-class UserDetail(RetrieveAPIView):
-    """Информация о пользователе"""
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
-
-class UserDestroy(DestroyAPIView):
-    """Удаление пользователя"""
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated, IsOwner)
 
 ############################# Работа с контактом#####################
 
@@ -66,7 +61,7 @@ class ShopCreate(ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
 class ShopUpdate(UpdateAPIView):
-    """Создание обновление магазина"""
+    """Обновление магазина"""
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
     permission_classes = (IsAuthenticated, IsOwner)

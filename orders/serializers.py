@@ -17,10 +17,10 @@ class ShopUserSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Класс создает, обновляет пользователя и отправляет письма о успешно создании, обновлении"""
+    """Класс создает, обновляет пользователя и отправляет письма о успешном создании, обновлении"""
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email',]
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
 
 
     def create(self, validated_data):
@@ -115,8 +115,6 @@ class ShopSerializer(serializers.ModelSerializer):
                                                 name=key,
                                                 value=value)
         return shop
-
-
 
 
 class ParametrsSerializerFORProduct(serializers.ModelSerializer):
