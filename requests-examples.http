@@ -10,26 +10,25 @@ POST {{baseUrl}}usercreate/
 Content-Type: application/json
 
 {
-  "username": "Sem",
+  "username": "Semenov",
   "first_name": "Семен",
   "last_name": "Семенов",
   "email": "stas.ik1987@yandex.ru",
   "password": "123456lkldfkdfs"
 }
 
-
 ###
 
 # Запрос№2. Получение информации о пользователе
-GET {{baseUrl}}user/
+GET {{baseUrl}}user/2/
 Content-Type: application/json
-Authorization: Token e08f62ab2c68555d0b7892167c237aeeb808cdc2
+Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
 
 ###
 # Запрос№3. Изменение пользователя
-PATCH {{baseUrl}}user/3/
+PATCH {{baseUrl}}user/2/
 Content-Type: application/json
-Authorization: Token e08f62ab2c68555d0b7892167c237aeeb808cdc2
+Authorization: Token 7665c6a5d18e2d5d57bbd372ebbe423e291208d7
 
 {
   "password": "123"
@@ -37,7 +36,7 @@ Authorization: Token e08f62ab2c68555d0b7892167c237aeeb808cdc2
 
 ###
 # Запрос№4. Удаление пользователя
-DELETE {{baseUrl}}user/3/
+DELETE {{baseUrl}}user/2/
 Content-Type: application/json
 Authorization: Token 1811c088fe042fdadecabd43b70750e9be0668ef
 
@@ -47,7 +46,7 @@ Authorization: Token 1811c088fe042fdadecabd43b70750e9be0668ef
 # Запрос№5. Создание контакта
 POST {{baseUrl}}contact/create/
 Content-Type: application/json
-Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
+Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
 
 {
   "city": "Челябинск",
@@ -64,7 +63,7 @@ Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
 # Запрос№6. Изменение контакта
 PATCH {{baseUrl}}contact/update/1/
 Content-Type: application/json
-Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
+Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
 
 {
   "city": "Кайгородово"
@@ -76,7 +75,7 @@ Authorization: Token 384d1f863e0945fc0c114c581fa9e6ebe17de222
 # Запрос№7. Запрос на создание магазина и загрузку товара из прайса по указанному URL
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
+Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
 
 {
   "name": "Связной",
@@ -87,7 +86,7 @@ Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
 # Запрос№8. Запрос на получение списка магазинов
 GET {{baseUrl}}shop/all/
 Content-Type: application/json
-Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
+Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
 
 ###
 # Запрос№9. На деактивацию магазина
