@@ -29,6 +29,7 @@ router.register('user', UserViewSet)
 router.register('usercreate', UserCreateViewSet)
 
 urlpatterns = [
+    path('', include('social_django.urls')),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)), # Роут для работы с пользователем
 

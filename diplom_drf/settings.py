@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'orders',
 
+    'social_django',
+
 ]
 
 
@@ -98,6 +100,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
             ],
         },
     },
@@ -161,3 +164,13 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',          # бекенд авторизации через ВКонтакте
+    'django.contrib.auth.backends.ModelBackend', # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
+)
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '51713059'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'SclLCWEarcy4eE0nXyzB'
+
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/api/user/'

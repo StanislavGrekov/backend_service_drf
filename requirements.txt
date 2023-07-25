@@ -8,3 +8,4 @@ requests
 django-filter
 pytest-django
 pytest
+social-auth-app-django
