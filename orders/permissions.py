@@ -1,8 +1,10 @@
 from rest_framework import permissions
+
 from django.contrib.auth.models import User
 
 def get_username(request):
     """Получение id пользователя"""
+
     if request.user.is_authenticated:
         user_id = request.user.id
         return user_id

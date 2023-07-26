@@ -26,6 +26,7 @@ class UserCreateViewSet(mixins.CreateModelMixin,
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+
 class UserViewSet(mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
                    mixins.DestroyModelMixin,
@@ -35,6 +36,15 @@ class UserViewSet(mixins.RetrieveModelMixin,
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsOwner)
+
+
+class UserVkViewSet(APIView):
+    """Сюда осуществляется редирект после аутентификации в VK.
+    я так и не разобрался как вытащить из запроса(сессии) имя пользователя под которым прошла регистрация."""
+
+    def get(self, request, *args, **kwargs):
+        # print(request.auth.key)
+        return JsonResponse({'Answer': 'Thank you for using the our service!'})
 
 
 ############################# Работа с контактом#####################

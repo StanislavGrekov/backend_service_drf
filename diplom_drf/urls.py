@@ -20,7 +20,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 from orders.views import UserViewSet, UserCreateViewSet, ShopCreate, ShopUpdate, \
     ShopDestroy, ContactCreate, ContactUpdate, ListProductView, ListProductDateView, ListCategoryView, \
-    ListShopView, OrderItemCreate, OrderProcessing, OrderAdminProcessing
+    ListShopView, OrderItemCreate, OrderProcessing, OrderAdminProcessing, UserVkViewSet
 
 from rest_framework.routers import DefaultRouter
 
@@ -29,7 +29,6 @@ router.register('user', UserViewSet)
 router.register('usercreate', UserCreateViewSet)
 
 urlpatterns = [
-    path('', include('social_django.urls')),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)), # Роут для работы с пользователем
 
@@ -61,5 +60,9 @@ urlpatterns = [
     # Пути для обработки заказа (админ)
     path('api/order/admin/list/<int:pk>/', OrderAdminProcessing.as_view()),  # Просмотр заказа по номеру заказа
     path('api/order/admin/processing/', OrderAdminProcessing.as_view()),  # Запуск заказа в доставку
+
+    # Пути для входа через VK
+    path('', include('social_django.urls')),
+    path('uservk/', UserVkViewSet.as_view())
 ]
 

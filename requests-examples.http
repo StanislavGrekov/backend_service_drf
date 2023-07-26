@@ -20,7 +20,7 @@ Content-Type: application/json
 ###
 
 # Запрос№2. Получение информации о пользователе
-GET {{baseUrl}}user/2/
+GET {{baseUrl}}user/3/
 Content-Type: application/json
 Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
 
