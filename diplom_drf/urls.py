@@ -63,6 +63,9 @@ urlpatterns = [
 
     # Пути для входа через VK
     path('', include('social_django.urls')),
-    path('uservk/', UserVkViewSet.as_view())
+    path('uservk/', UserVkViewSet.as_view()),
+
+    # Путь для работы с Silk
+    path('silk/', include('silk.urls', namespace='silk'))
 ]
 

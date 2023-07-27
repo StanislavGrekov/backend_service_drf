@@ -9,3 +9,4 @@ django-filter
 pytest-django
 pytest
 social-auth-app-django
+django-silk

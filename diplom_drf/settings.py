@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'orders',
 
     'social_django',
+    'silk',
 
 ]
 
@@ -51,7 +52,7 @@ INSTALLED_APPS = [
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = "stas.ik1987@yandex.ru"
-EMAIL_HOST_PASSWORD =''
+EMAIL_HOST_PASSWORD ='os36nk76'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 SERVER_EMAIL = EMAIL_HOST_USER
@@ -86,6 +87,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'diplom_drf.urls'

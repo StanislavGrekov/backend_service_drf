@@ -10,7 +10,7 @@ POST {{baseUrl}}usercreate/
 Content-Type: application/json
 
 {
-  "username": "Semenov",
+  "username": "Sema",
   "first_name": "Семен",
   "last_name": "Семенов",
   "email": "stas.ik1987@yandex.ru",
@@ -20,15 +20,15 @@ Content-Type: application/json
 ###
 
 # Запрос№2. Получение информации о пользователе
-GET {{baseUrl}}user/3/
+GET {{baseUrl}}user/
 Content-Type: application/json
-Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
+Authorization: Token 978d47695255d2b1ab4018ed8b03ffbe2c0a65f1
 
 ###
 # Запрос№3. Изменение пользователя
-PATCH {{baseUrl}}user/2/
+PATCH {{baseUrl}}user/5/
 Content-Type: application/json
-Authorization: Token 7665c6a5d18e2d5d57bbd372ebbe423e291208d7
+Authorization: Token 978d47695255d2b1ab4018ed8b03ffbe2c0a65f1
 
 {
   "password": "123"
@@ -75,7 +75,7 @@ Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
 # Запрос№7. Запрос на создание магазина и загрузку товара из прайса по указанному URL
 POST {{baseUrl}}shop/create/
 Content-Type: application/json
-Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
+Authorization: Token 978d47695255d2b1ab4018ed8b03ffbe2c0a65f1
 
 {
   "name": "Связной",
@@ -86,7 +86,7 @@ Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
 # Запрос№8. Запрос на получение списка магазинов
 GET {{baseUrl}}shop/all/
 Content-Type: application/json
-Authorization: Token a3c422e5e5d4e6133938b3ac4cf6965b290d2b7d
+Authorization: Token 978d47695255d2b1ab4018ed8b03ffbe2c0a65f1
 
 ###
 # Запрос№9. На деактивацию магазина
@@ -100,9 +100,9 @@ Authorization: Token 0e42ec1aa29a7729b79500bd3695d010a71d159f
 
 ###
 # Запрос№10. Запрос на удаление магазина и товаров из прайса
-DELETE {{baseUrl}}shop/delete/2/
+DELETE {{baseUrl}}shop/delete/7/
 Content-Type: application/json
-Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
+Authorization: Token 978d47695255d2b1ab4018ed8b03ffbe2c0a65f1
 ###
 
 
@@ -111,7 +111,7 @@ Authorization: Token 07a9964a2ead74c2f0a3dddf2c2bce6100272d15
 # Запрос№11-1. Получение списка товаров (все товары)
 GET {{baseUrl}}product/list/
 Content-Type: application/json
-Authorization: Token 32f61c8baffc911071f645ee58be24dbfa84f6db
+Authorization: Token b4effbbc8fca98e276b5db8164629fb1ee79464f
 
 ###
 # Запрос№11-2. Фильтрация по модели (вхождение текста)
@@ -149,7 +149,7 @@ Authorization: Token 1bff16187689c5f66495b892330aaaf07c0a4514
 # Запрос№12. Просмотр корзины
 GET {{baseUrl}}basket/list/
 Content-Type: application/json
-Authorization: Token 1bff16187689c5f66495b892330aaaf07c0a4514
+Authorization: Token b4effbbc8fca98e276b5db8164629fb1ee79464f
 
 ###
 # Запрос№13 Создание заказа
