@@ -83,10 +83,13 @@ class ShopDestroy(APIView):
 
     def delete(self, request, pk=None):
         try:
-            shop = Shop.objects.get(id=pk)
-            categories = Category.objects.filter(shops=shop.id)
+            shop = Shop.objects.only('id').get(id=pk) # Здесь берутся значения определенного столбца
+            categories = Category.objects.only('id').filter(shops=shop.id) # Здесь берутся значения определенного столбца
             for cat in categories:
-                Product.objects.filter(category_id=cat.id).delete()
+                prod = Product.objects.only('category_id').filter(category_id=cat.id) # Здесь берутся значения определенного столбца
+                   # .prefetch_related('category')
+                #Group.objects.all().prefetch_related('members').values_list('name', 'members__name')
+                prod.delete()
             categories.delete()
             shop.delete()
             return Response({'Answer': "The store has been deleted!"})
@@ -103,22 +106,24 @@ class OrderItemCreate(APIView):
         """ Просмотр корзины пользователя """
         user_id = get_username(request)
         user = User.objects.get(id=user_id)
-        contact = Contact.objects.get(user_id=user_id)
+        contact = Contact.objects.values('user_id','phone').get(user_id=user_id) # Здесь берутся значения по определенным столбцам
 
         order_dict = {}
         total_cost = 0
 
-        orders = Order.objects.filter(user_id=user_id, state='basket')
+        orders = Order.objects.values('id','user_id','state').filter(user_id=user_id, state='basket') # Здесь берутся значения по определенным столбцам
+
         for order in orders:
-            orderitem = OrderItem.objects.get(order_id=order.id)
-            products = ProductInfo.objects.filter(id=orderitem.product_info_id)
+            orderitem = OrderItem.objects.get(order_id=order['id'])
+            products = ProductInfo.objects.values('external_id','price_rrc','model').filter(id=orderitem.product_info_id) # Здесь берутся значения по определенным столбцам
+
             for product in products:
-                order_dict[order.id] = f'external_id:{product.external_id}, model:{product.model}, price:{product.price_rrc}, quantity:{orderitem.quantity}, total_price: {product.price_rrc*orderitem.quantity} rubles.'
-                total_cost += product.price_rrc*orderitem.quantity
+                order_dict[order['id']] = f"external_id:{product['external_id']}, model:{product['model']}, price:{product['price_rrc']}, quantity:{orderitem.quantity}, total_price: {product['price_rrc']*orderitem.quantity} rubles."
+                total_cost += product['price_rrc']*orderitem.quantity
 
         order_dict['total_cost']=f'{total_cost} rubles.'
 
-        return JsonResponse({'user': user.username, 'phone': contact.phone, 'orders':order_dict})
+        return JsonResponse({'user': user.username, 'phone': contact['phone'], 'orders':order_dict})
 
 
     def post(self, request, *args, **kwargs):
