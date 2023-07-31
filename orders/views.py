@@ -84,11 +84,12 @@ class ShopDestroy(APIView):
     def delete(self, request, pk=None):
         try:
             shop = Shop.objects.only('id').get(id=pk) # Здесь берутся значения определенного столбца
-            categories = Category.objects.only('id').filter(shops=shop.id) # Здесь берутся значения определенного столбца
+            # shop = Shop.objects.select_related('user').get(id=pk)
+            categories = Category.objects.only('id').filter(shops=shop.id)
+            # categories = Category.objects.prefetch_related('shops').filter(shops=shop.id)
             for cat in categories:
-                prod = Product.objects.only('category_id').filter(category_id=cat.id) # Здесь берутся значения определенного столбца
-                   # .prefetch_related('category')
-                #Group.objects.all().prefetch_related('members').values_list('name', 'members__name')
+                # prod = Product.objects.select_related('category').filter(category_id=cat.id)
+                prod = Product.objects.only('category_id').filter(category_id=cat.id)
                 prod.delete()
             categories.delete()
             shop.delete()

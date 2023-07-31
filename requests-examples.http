@@ -100,7 +100,7 @@ Authorization: Token 978d47695255d2b1ab4018ed8b03ffbe2c0a65f1
 
 ###
 # Запрос№10. Запрос на удаление магазина и товаров из прайса
-DELETE {{baseUrl}}shop/delete/12/
+DELETE {{baseUrl}}shop/delete/18/
 Content-Type: application/json
 Authorization: Token 978d47695255d2b1ab4018ed8b03ffbe2c0a65f1
 ###
@@ -164,7 +164,7 @@ Authorization: Token 978d47695255d2b1ab4018ed8b03ffbe2c0a65f1
 
 ###
 # Запрос№14 Удаление заказа
-DELETE {{baseUrl}}basket/delete/1/
+DELETE {{baseUrl}}basket/delete/3/
 Content-Type: application/json
 Authorization: Token 978d47695255d2b1ab4018ed8b03ffbe2c0a65f1
 ###
